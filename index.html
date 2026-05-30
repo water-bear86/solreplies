@@ -3,185 +3,468 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@solana reply generator</title>
+<title>Sol Replies</title>
+
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #1a1a2e;
-    color: #e0e0e0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:
+    radial-gradient(circle at top,#22254a 0%,#1a1a2e 40%,#0f1020 100%);
+  color:#e0e0e0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+.card{
+  background:#16213e;
+  border:1px solid #0f3460;
+  border-radius:20px;
+  padding:40px;
+  text-align:center;
+  max-width:420px;
+  width:100%;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.5),
+    0 0 40px rgba(153,69,255,.08);
+  animation:float 6s ease-in-out infinite;
+}
+
+.logo{
+  width:min(100%,320px);
+  height:auto;
+  margin-bottom:24px;
+  filter:drop-shadow(0 0 18px rgba(153,69,255,.45));
+  animation:logoFloat 5s ease-in-out infinite;
+}
+
+button{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,#9945FF,#14F195);
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:600;
+  border:none;
+  border-radius:40px;
+  padding:14px 40px;
+  cursor:pointer;
+  transition:
+    transform .15s,
+    box-shadow .15s;
+  box-shadow:0 4px 20px rgba(153,69,255,.3);
+}
+
+button:hover{
+  transform:scale(1.04);
+  box-shadow:0 6px 28px rgba(153,69,255,.45);
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+button:disabled{
+  opacity:.65;
+  cursor:wait;
+}
+
+button::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,.2),
+      transparent
+    );
+  transform:translateX(-100%);
+}
+
+button:hover::after{
+  animation:sweep .8s ease;
+}
+
+.reply{
+  margin-top:28px;
+  font-size:1.25rem;
+  font-weight:500;
+  min-height:4em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#14F195;
+  text-align:center;
+}
+
+.reply.pop{
+  animation:pop .25s ease;
+}
+
+.legendary{
+  color:#ffd700;
+  animation:legendaryGlow 1.5s ease-in-out infinite;
+}
+
+.secondary{
+  background:transparent;
+  color:#888;
+  font-size:.85rem;
+  font-weight:500;
+  border:1px solid #333;
+  border-radius:40px;
+  padding:8px 20px;
+  cursor:pointer;
+  transition:all .15s;
+  margin-top:16px;
+}
+
+.secondary:hover{
+  color:#aaa;
+  border-color:#555;
+}
+
+.meter{
+  height:8px;
+  background:#0e1325;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:24px;
+}
+
+#fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#9945FF,#14F195);
+  transition:width .4s ease;
+}
+
+#chance{
+  margin-top:10px;
+  font-size:.9rem;
+  color:#8fa0c7;
+}
+
+#attempts{
+  margin-top:8px;
+  font-size:.8rem;
+  color:#666;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0) rotate(-.5deg);}
+  50%{transform:translateY(-5px) rotate(.5deg);}
+}
+
+@keyframes pop{
+  0%{transform:scale(.9);opacity:0;}
+  70%{transform:scale(1.05);}
+  100%{transform:scale(1);}
+}
+
+@keyframes legendaryGlow{
+  0%,100%{
+    text-shadow:0 0 8px rgba(255,215,0,.4);
   }
-  .card {
-    background: #16213e;
-    border: 1px solid #0f3460;
-    border-radius: 16px;
-    padding: 40px;
-    text-align: center;
-    max-width: 420px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  50%{
+    text-shadow:
+      0 0 20px rgba(255,215,0,.8),
+      0 0 40px rgba(255,215,0,.4);
   }
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #9945FF;
-    margin-bottom: 32px;
-    letter-spacing: -.02em;
+}
+
+@keyframes sweep{
+  to{
+    transform:translateX(200%);
   }
-  button {
-    background: linear-gradient(135deg, #9945FF, #14F195);
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 40px;
-    padding: 14px 40px;
-    cursor: pointer;
-    transition: transform .15s, box-shadow .15s;
-    box-shadow: 0 4px 20px rgba(153,69,255,.3);
-  }
-  button:hover { transform: scale(1.04); box-shadow: 0 6px 28px rgba(153,69,255,.45); }
-  button:active { transform: scale(.97); }
-  .reply {
-    margin-top: 28px;
-    font-size: 1.3rem;
-    font-weight: 500;
-    min-height: 3em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #14F195;
-    transition: opacity .15s;
-  }
-  .reply.fade { opacity: 0; }
-  .reply.legendary { color: #ffd700; }
-  .secondary {
-    background: transparent;
-    color: #888;
-    font-size: .85rem;
-    font-weight: 500;
-    border: 1px solid #333;
-    border-radius: 40px;
-    padding: 8px 20px;
-    cursor: pointer;
-    transition: all .15s;
-    margin-top: 16px;
-  }
-  .secondary:hover {
-    color: #aaa;
-    border-color: #555;
-  }
-  .secondary:active { transform: scale(.97); }
+}
 </style>
 </head>
+
 <body>
+
 <div class="card">
-  <h1>@solana reply generator</h1>
-  <button id="btn">Get follows</button>
-  <div class="reply" id="reply"></div>
-  <button id="replyBtn" class="secondary">reply to @solana</button>
+
+  <img
+    class="logo"
+    src="https://raw.githubusercontent.com/water-bear86/solreplies/master/solreplies.png"
+    alt="Sol Replies"
+  >
+
+  <button id="btn">Get Follows</button>
+
+  <div class="reply" id="reply">
+    Click the button and begin degenerating.
+  </div>
+
+  <div class="meter">
+    <div id="fill"></div>
+  </div>
+
+  <div id="chance">
+    Follow chance: 0.01%
+  </div>
+
+  <div id="attempts">
+    Replies generated: 0
+  </div>
+
+  <button id="replyBtn" class="secondary">
+    Reply to @solana
+  </button>
+
 </div>
+
 <script>
-  const prefixes = [
-    "gm",
-    "respectfully",
-    "many are saying",
-    "looking into this",
-    "few understand",
-    "source: trust me bro",
-    "bullish",
-    "bearish",
-    "concerning",
-    "huge if true",
-    "interesting",
-    "the goblins approve",
-  ];
 
-  const subjects = [
-    "this",
-    "the chart",
-    "the roadmap",
-    "the timeline",
-    "the market",
-    "this thesis",
-    "the vibes",
-    "the token",
-    "the discourse",
-    "this post",
-    "the attention economy",
-    "proof of attention",
-  ];
+const prefixes = [
+  "gm",
+  "respectfully",
+  "many are saying",
+  "looking into this",
+  "few understand",
+  "source: trust me bro",
+  "bullish",
+  "bearish",
+  "concerning",
+  "huge if true",
+  "interesting",
+  "the goblins approve"
+];
 
-  const endings = [
-    "wagmi",
-    "ngmi",
-    "soon™",
-    "absolute cinema",
-    "skill issue",
-    "many such cases",
-    "we are so back",
-    "it's never been more over",
-    "proof of vibes",
-    "future historians will study this",
-    "transaction failed successfully",
-    "the voices have updated guidance",
-  ];
+const subjects = [
+  "this",
+  "the chart",
+  "the roadmap",
+  "the timeline",
+  "the market",
+  "this thesis",
+  "the vibes",
+  "the token",
+  "the discourse",
+  "this post",
+  "the attention economy",
+  "proof of attention"
+];
 
-  const legendary = [
-    "@solana follow me and I'll ship this",
-    "I built a reply generator to get this follow",
-    "the follow was inside us all along",
-    "tokenizing this interaction",
-    "this reply is optimized for engagement extraction",
-    "validator missed slot",
-    "follow probability: 0.0001%",
-  ];
+const endings = [
+  "wagmi",
+  "ngmi",
+  "soon™",
+  "absolute cinema",
+  "skill issue",
+  "many such cases",
+  "we are so back",
+  "it's never been more over",
+  "proof of vibes",
+  "future historians will study this",
+  "transaction failed successfully",
+  "the voices have updated guidance"
+];
 
-  function generateReply() {
-    if (Math.random() < 0.03) {
-      return { text: legendary[Math.floor(Math.random() * legendary.length)], legendary: true };
-    }
+const legendary = [
+  "@solana follow me and I'll ship this",
+  "I built a reply generator to get this follow",
+  "the follow was inside us all along",
+  "tokenizing this interaction",
+  "this reply is optimized for engagement extraction",
+  "validator missed slot",
+  "follow probability: 0.0001%"
+];
 
-    const p = prefixes[Math.floor(Math.random() * prefixes.length)];
-    const s = subjects[Math.floor(Math.random() * subjects.length)];
-    const e = endings[Math.floor(Math.random() * endings.length)];
+const loadingMessages = [
+  "consulting crypto twitter...",
+  "running engagement analysis...",
+  "detecting alpha...",
+  "checking vibes...",
+  "extracting attention...",
+  "measuring aura...",
+  "tokenizing interaction...",
+  "contacting goblin council...",
+  "loading conviction...",
+  "recalculating thesis...",
+  "locating liquidity...",
+  "performing on-chain divination...",
+  "consulting the chart...",
+  "asking ChatGPT...",
+  "asking Claude...",
+  "asking the goblins...",
+  "running proof of vibes...",
+  "harvesting engagement...",
+  "simulating follow event...",
+  "degenerating...",
+  "degenerating further...",
+  "maximum degeneration...",
+  "industrial-grade degeneration...",
+  "deploying cope...",
+  "deploying hopium...",
+  "manufacturing conviction...",
+  "consulting the voices...",
+  "the voices are typing...",
+  "validator missed slot...",
+  "searching for the perfect reply...",
+  "optimizing for follows...",
+  "engagement engine warming up...",
+  "bribing the algorithm...",
+  "asking @solana nicely...",
+  "crafting thought leadership...",
+  "becoming a reply guy...",
+  "becoming a bigger reply guy...",
+  "reaching unprecedented reply guy levels...",
+  "running Monte Carlo follow simulation...",
+  "probability remains concerning..."
+];
 
-    return { text: `${p} ${s} ... ${e}`, legendary: false };
+let attempts = 0;
+let lastText = "";
+let generating = false;
+
+const btn = document.getElementById("btn");
+const replyEl = document.getElementById("reply");
+const fillEl = document.getElementById("fill");
+const chanceEl = document.getElementById("chance");
+const attemptsEl = document.getElementById("attempts");
+
+function generateReply(){
+
+  if(Math.random() < 0.03){
+    return {
+      text: legendary[Math.floor(Math.random()*legendary.length)],
+      legendary: true
+    };
   }
 
-  let attempts = 0;
-  let lastText = "";
-  const replyEl = document.getElementById('reply');
+  const p = prefixes[Math.floor(Math.random()*prefixes.length)];
+  const s = subjects[Math.floor(Math.random()*subjects.length)];
+  const e = endings[Math.floor(Math.random()*endings.length)];
 
-  document.getElementById('replyBtn').addEventListener('click', () => {
-    if (lastText) {
-      window.open(`https://x.com/intent/post?in_reply_to=2060632805856457135&text=${encodeURIComponent(lastText)}`, '_blank');
-    }
-  });
+  return {
+    text: `${p} ${s} ... ${e}`,
+    legendary: false
+  };
+}
 
-  document.getElementById('btn').addEventListener('click', () => {
-    attempts++;
+document.getElementById("replyBtn")
+.addEventListener("click",()=>{
 
-    if (attempts === 25) {
-      lastText = "@solana now follows you (unverified)";
-      replyEl.textContent = lastText;
-      replyEl.className = "reply";
-      return;
-    }
+  if(!lastText) return;
 
-    replyEl.classList.add('fade');
-    setTimeout(() => {
-      const result = generateReply();
-      lastText = result.text;
-      replyEl.textContent = lastText;
-      replyEl.className = result.legendary ? "reply legendary" : "reply";
-      setTimeout(() => replyEl.classList.remove('fade'), 20);
-    }, 120);
-  });
+  window.open(
+    `https://x.com/intent/post?text=${encodeURIComponent(lastText)}`,
+    "_blank"
+  );
+});
+
+btn.addEventListener("click", async ()=>{
+
+  if(generating) return;
+
+  generating = true;
+  btn.disabled = true;
+  btn.textContent = "Generating...";
+
+  const wait =
+    Math.min(
+      4500,
+      500 + (attempts * 15) + Math.random() * 1500
+    );
+
+  replyEl.className = "reply";
+
+  replyEl.textContent =
+    loadingMessages[
+      Math.floor(
+        Math.random() *
+        loadingMessages.length
+      )
+    ];
+
+  const interval = setInterval(()=>{
+
+    replyEl.textContent =
+      loadingMessages[
+        Math.floor(
+          Math.random() *
+          loadingMessages.length
+        )
+      ];
+
+  },350);
+
+  await new Promise(resolve =>
+    setTimeout(resolve, wait)
+  );
+
+  clearInterval(interval);
+
+  attempts++;
+
+  const chance =
+    Math.min(
+      99.9,
+      0.01 + attempts * 0.37
+    );
+
+  if(attempts === 25){
+    lastText =
+      "@solana viewed your profile 👀";
+  }
+  else if(attempts === 50){
+    lastText =
+      "Follow probability upgraded to Delusional";
+  }
+  else if(attempts === 100){
+    lastText =
+      "@solana now follows you (unverified)";
+  }
+  else{
+    const result = generateReply();
+
+    lastText = result.text;
+
+    replyEl.className =
+      result.legendary
+        ? "reply legendary"
+        : "reply";
+  }
+
+  replyEl.textContent = lastText;
+
+  replyEl.classList.remove("pop");
+  void replyEl.offsetWidth;
+  replyEl.classList.add("pop");
+
+  fillEl.style.width = `${chance}%`;
+
+  chanceEl.textContent =
+    `Follow chance: ${chance.toFixed(2)}%`;
+
+  attemptsEl.textContent =
+    `Replies generated: ${attempts}`;
+
+  btn.disabled = false;
+  btn.textContent = "Get Follows";
+
+  generating = false;
+});
+
 </script>
+
 </body>
 </html>
