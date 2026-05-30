@@ -336,26 +336,23 @@
     margin-top: 4px;
     flex-wrap: wrap;
   }
-  .btn-secondary {
-    background: transparent;
-    color: #555;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    font-weight: 500;
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: 40px;
-    padding: 8px 18px;
-    cursor: pointer;
-    transition: all .15s;
-    text-transform: uppercase;
-    letter-spacing: .08em;
+  .secondary{
+    background:transparent;
+    color:#888;
+    font-size:.85rem;
+    font-weight:500;
+    border:1px solid #333;
+    border-radius:40px;
+    padding:8px 20px;
+    cursor:pointer;
+    transition:all .15s;
+    margin-top:16px;
   }
-  .btn-secondary:hover {
-    color: #888;
-    border-color: rgba(255,255,255,.12);
-    background: rgba(255,255,255,.02);
+
+  .secondary:hover{
+    color:#aaa;
+    border-color:#555;
   }
-  .btn-secondary:active { transform: scale(.97); }
 
   .footer {
     margin-top: 16px;
@@ -435,7 +432,7 @@
       <span class="badge">● beta</span>
     </div>
 
-    <img src="solreplies.png" alt="Solana Reply Generator" class="logo">
+    <img src="https://raw.githubusercontent.com/water-bear86/solreplies/master/solreplies.png" alt="Solana Reply Generator" class="logo">
     <div class="subtitle">blockchain-powered engagement engine</div>
 
     <div class="stats">
@@ -475,7 +472,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn-secondary" id="replyBtn">↗ reply to @solana</button>
+      <button class="secondary" id="replyBtn">↗ reply to @solana</button>
     </div>
 
     <div class="footer">
