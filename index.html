@@ -3,467 +3,708 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sol Replies</title>
-
+<title>@solana reply generator</title>
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
 
-body{
-  background:
-    radial-gradient(circle at top,#22254a 0%,#1a1a2e 40%,#0f1020 100%);
-  color:#e0e0e0;
-  font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  overflow:hidden;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.card{
-  background:#16213e;
-  border:1px solid #0f3460;
-  border-radius:20px;
-  padding:40px;
-  text-align:center;
-  max-width:420px;
-  width:100%;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.5),
-    0 0 40px rgba(153,69,255,.08);
-  animation:float 6s ease-in-out infinite;
-}
+  body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
 
-.logo{
-  width:min(100%,320px);
-  height:auto;
-  margin-bottom:24px;
-  filter:drop-shadow(0 0 18px rgba(153,69,255,.45));
-}
+  canvas#matrix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    opacity: .08;
+    pointer-events: none;
+  }
 
-button{
-  position:relative;
-  overflow:hidden;
-  background:linear-gradient(135deg,#9945FF,#14F195);
-  color:#fff;
-  font-size:1.1rem;
-  font-weight:600;
-  border:none;
-  border-radius:40px;
-  padding:14px 40px;
-  cursor:pointer;
-  transition:
-    transform .15s,
-    box-shadow .15s;
-  box-shadow:0 4px 20px rgba(153,69,255,.3);
-}
-
-button:hover{
-  transform:scale(1.04);
-  box-shadow:0 6px 28px rgba(153,69,255,.45);
-}
-
-button:active{
-  transform:scale(.97);
-}
-
-button:disabled{
-  opacity:.65;
-  cursor:wait;
-}
-
-button::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:
-    linear-gradient(
-      120deg,
+  .scanlines {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
       transparent,
-      rgba(255,255,255,.2),
-      transparent
+      transparent 2px,
+      rgba(0,0,0,.08) 2px,
+      rgba(0,0,0,.08) 4px
     );
-  transform:translateX(-100%);
-}
-
-button:hover::after{
-  animation:sweep .8s ease;
-}
-
-.reply{
-  margin-top:28px;
-  font-size:1.25rem;
-  font-weight:500;
-  min-height:4em;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#14F195;
-  text-align:center;
-}
-
-.reply.pop{
-  animation:pop .25s ease;
-}
-
-.legendary{
-  color:#ffd700;
-  animation:legendaryGlow 1.5s ease-in-out infinite;
-}
-
-.secondary{
-  background:transparent;
-  color:#888;
-  font-size:.85rem;
-  font-weight:500;
-  border:1px solid #333;
-  border-radius:40px;
-  padding:8px 20px;
-  cursor:pointer;
-  transition:all .15s;
-  margin-top:16px;
-}
-
-.secondary:hover{
-  color:#aaa;
-  border-color:#555;
-}
-
-.meter{
-  height:8px;
-  background:#0e1325;
-  border-radius:999px;
-  overflow:hidden;
-  margin-top:24px;
-}
-
-#fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#9945FF,#14F195);
-  transition:width .4s ease;
-}
-
-#chance{
-  margin-top:10px;
-  font-size:.9rem;
-  color:#8fa0c7;
-}
-
-#attempts{
-  margin-top:8px;
-  font-size:.8rem;
-  color:#666;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-6px);}
-}
-
-@keyframes logoFloat{
-  0%,100%{transform:translateY(0) rotate(-.5deg);}
-  50%{transform:translateY(-5px) rotate(.5deg);}
-}
-
-@keyframes pop{
-  0%{transform:scale(.9);opacity:0;}
-  70%{transform:scale(1.05);}
-  100%{transform:scale(1);}
-}
-
-@keyframes legendaryGlow{
-  0%,100%{
-    text-shadow:0 0 8px rgba(255,215,0,.4);
   }
-  50%{
-    text-shadow:
-      0 0 20px rgba(255,215,0,.8),
-      0 0 40px rgba(255,215,0,.4);
-  }
-}
 
-@keyframes sweep{
-  to{
-    transform:translateX(200%);
+  .ticker-tape {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    z-index: 2;
+    background: linear-gradient(90deg, #9945FF, #14F195, #9945FF);
+    padding: 4px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: .7rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 6px rgba(255,255,255,.5);
+    text-transform: uppercase;
+    letter-spacing: .1em;
   }
-}
+  .ticker-tape .scroll {
+    display: inline-block;
+    animation: ticker 30s linear infinite;
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .orb {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    margin-left: -400px;
+    margin-top: -400px;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(153,69,255,.12) 0%, rgba(20,241,149,.06) 40%, transparent 70%);
+    animation: orbPulse 4s ease-in-out infinite;
+  }
+  @keyframes orbPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .6; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  }
+
+  .card-wrap {
+    position: relative;
+    z-index: 3;
+    perspective: 1200px;
+  }
+
+  .card {
+    background: linear-gradient(135deg, rgba(22,33,62,.92), rgba(10,10,20,.95));
+    border: 1px solid rgba(153,69,255,.3);
+    border-radius: 20px;
+    padding: 48px 44px 36px;
+    text-align: center;
+    max-width: 500px;
+    width: 90vw;
+    box-shadow:
+      0 0 40px rgba(153,69,255,.15),
+      0 0 80px rgba(20,241,149,.08),
+      inset 0 1px 0 rgba(255,255,255,.04);
+    backdrop-filter: blur(12px);
+    transform-style: preserve-3d;
+    animation: cardFloat 6s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: -2px; left: -2px;
+    right: -2px; bottom: -2px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #9945FF, #14F195, #9945FF, #14F195);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: borderGlow 4s ease infinite;
+    opacity: .5;
+  }
+  @keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes cardFloat {
+    0%, 100% { transform: rotateX(1deg) rotateY(-1deg); }
+    50% { transform: rotateX(-1deg) rotateY(1deg); }
+  }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: .55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(153,69,255,.3);
+    color: #9945FF;
+    background: rgba(153,69,255,.08);
+    animation: badgePulse 2s ease-in-out infinite alternate;
+  }
+  .badge:nth-child(2) { border-color: rgba(20,241,149,.3); color: #14F195; background: rgba(20,241,149,.08); animation-delay: .3s; }
+  .badge:nth-child(3) { border-color: rgba(255,215,0,.3); color: #ffd700; background: rgba(255,215,0,.08); animation-delay: .6s; }
+  @keyframes badgePulse { from { opacity: .7; } to { opacity: 1; } }
+
+  h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #9945FF, #14F195, #ffd700);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShimmer 3s linear infinite;
+    margin-bottom: 6px;
+    letter-spacing: -.03em;
+  }
+  @keyframes textShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .subtitle {
+    font-size: .65rem;
+    color: #666;
+    margin-bottom: 24px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: rgba(255,255,255,.02);
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 10px;
+    padding: 10px 6px;
+    transition: all .2s;
+  }
+  .stat .label {
+    font-size: .5rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: #555;
+  }
+  .stat .value {
+    font-size: .8rem;
+    font-weight: 700;
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat .value.green { color: #14F195; }
+  .stat .value.purple { color: #9945FF; }
+  .stat .value.gold { color: #ffd700; }
+
+  .tx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .55rem;
+    color: #555;
+    margin-bottom: 20px;
+    padding: 4px 12px;
+    background: rgba(255,255,255,.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.04);
+  }
+  .tx-badge .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #14F195;
+    animation: dotBlink 1.2s step-end infinite;
+  }
+  @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+
+  .btn-primary {
+    position: relative;
+    background: linear-gradient(135deg, #9945FF, #14F195);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 48px;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 4px 30px rgba(153,69,255,.3);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,.06), transparent 60%);
+    animation: btnShine 3s linear infinite;
+  }
+  @keyframes btnShine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .btn-primary:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 40px rgba(153,69,255,.5);
+  }
+  .btn-primary:active { transform: scale(.97); }
+  .btn-primary:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .equalizer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    height: 20px;
+    margin: 16px 0 8px;
+    opacity: .4;
+  }
+  .equalizer .bar {
+    width: 3px;
+    background: linear-gradient(to top, #9945FF, #14F195);
+    border-radius: 2px;
+    animation: eqWave 1.2s ease-in-out infinite alternate;
+  }
+  .equalizer .bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .equalizer .bar:nth-child(2) { height: 14px; animation-delay: .1s; }
+  .equalizer .bar:nth-child(3) { height: 6px; animation-delay: .2s; }
+  .equalizer .bar:nth-child(4) { height: 18px; animation-delay: .3s; }
+  .equalizer .bar:nth-child(5) { height: 10px; animation-delay: .4s; }
+  .equalizer .bar:nth-child(6) { height: 16px; animation-delay: .5s; }
+  .equalizer .bar:nth-child(7) { height: 8px; animation-delay: .6s; }
+  .equalizer .bar:nth-child(8) { height: 12px; animation-delay: .7s; }
+  .equalizer .bar:nth-child(9) { height: 6px; animation-delay: .8s; }
+  .equalizer .bar:nth-child(10) { height: 16px; animation-delay: .9s; }
+  @keyframes eqWave {
+    0% { transform: scaleY(.6); }
+    100% { transform: scaleY(1); }
+  }
+
+  .reply {
+    margin: 6px 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-height: 2.8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #14F195;
+    text-shadow: 0 0 20px rgba(20,241,149,.3);
+    transition: opacity .12s;
+    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+  }
+  .reply.fade { opacity: 0; }
+  .reply.legendary {
+    color: #ffd700;
+    text-shadow: 0 0 30px rgba(255,215,0,.4);
+    animation: legendaryGlow 1s ease-in-out infinite alternate;
+  }
+  @keyframes legendaryGlow {
+    from { text-shadow: 0 0 20px rgba(255,215,0,.3); }
+    to { text-shadow: 0 0 40px rgba(255,215,0,.6), 0 0 60px rgba(255,215,0,.2); }
+  }
+
+  .reply-meta {
+    font-size: .5rem;
+    color: #444;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    min-height: 1.2em;
+    margin-bottom: 8px;
+  }
+
+  .btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #555;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 40px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all .15s;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .btn-secondary:hover {
+    color: #888;
+    border-color: rgba(255,255,255,.12);
+    background: rgba(255,255,255,.02);
+  }
+  .btn-secondary:active { transform: scale(.97); }
+
+  .footer {
+    margin-top: 16px;
+    font-size: .5rem;
+    color: #333;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  .footer a {
+    color: #555;
+    text-decoration: none;
+  }
+  .footer a:hover { color: #888; }
+
+  .loading-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,.04);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .loading-bar.active {
+    opacity: 1;
+  }
+  .loading-bar .fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #9945FF, #14F195);
+    border-radius: 2px;
+    transition: width .02s linear;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .celebration .spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    animation: sparkBurst 1.5s ease-out forwards;
+  }
+  @keyframes sparkBurst {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+  }
 </style>
 </head>
-
 <body>
 
-<div class="card">
+<canvas id="matrix"></canvas>
+<div class="scanlines"></div>
+<div class="orb" style="top:40%;left:30%"></div>
+<div class="orb" style="top:60%;left:70%;width:600px;height:600px;animation-delay:2s"></div>
 
-  <img
-    class="logo"
-    src="https://raw.githubusercontent.com/water-bear86/solreplies/master/solreplies.png"
-    alt="Sol Replies"
-  >
-
-  <button id="btn">Get Follows</button>
-
-  <div class="reply" id="reply">
-    Click the button and begin degenerating.
+<div class="ticker-tape">
+  <div class="scroll">
+    &nbsp;◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; VOL $2.4B &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; TVL $6.8B ▲ 1.1% &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; FEELS GOOD &nbsp;◈&nbsp; HODL &nbsp;◈&nbsp;
+    ◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; VOL $2.4B &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; TVL $6.8B ▲ 1.1% &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; FEELS GOOD &nbsp;◈&nbsp; HODL &nbsp;◈&nbsp;
   </div>
-
-  <div class="meter">
-    <div id="fill"></div>
-  </div>
-
-  <div id="chance">
-    Follow chance: 0.01%
-  </div>
-
-  <div id="attempts">
-    Replies generated: 0
-  </div>
-
-  <button id="replyBtn" class="secondary">
-    Reply to @solana
-  </button>
-
 </div>
 
+<div class="card-wrap">
+  <div class="card">
+
+    <div class="badge-row">
+      <span class="badge">● mainnet</span>
+      <span class="badge">● live</span>
+      <span class="badge">● beta</span>
+    </div>
+
+    <h1>@solana reply generator</h1>
+    <div class="subtitle">blockchain-powered engagement engine</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">replies gen'd</div>
+        <div class="value green" id="statReplies">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">follows earned</div>
+        <div class="value gold" id="statFollows">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">gas spent</div>
+        <div class="value purple" id="statGas">0.00 SOL</div>
+      </div>
+    </div>
+
+    <div class="tx-badge">
+      <span class="dot"></span>
+      <span id="txStatus">awaiting transaction...</span>
+    </div>
+
+    <button class="btn-primary" id="btn">► Execute Reply</button>
+
+    <div class="equalizer">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <div class="reply-meta" id="replyMeta">output pending</div>
+    <div class="reply" id="reply">
+      <span style="color:#555;font-weight:400;font-size:.85rem">press ► Execute Reply</span>
+    </div>
+
+    <div class="loading-bar" id="loadingBar">
+      <div class="fill" id="loadingFill"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" id="replyBtn">↗ reply to @solana</button>
+    </div>
+
+    <div class="footer">
+      <a href="https://github.com/water-bear86/solreplies" target="_blank">[source]</a>
+      &nbsp;·&nbsp; v0.4.2-alpha
+    </div>
+
+  </div>
+</div>
+
+<div class="celebration" id="celebration"></div>
+
 <script>
+  // ── matrix rain ──
+  (function() {
+    const c = document.getElementById('matrix');
+    const ctx = c.getContext('2d');
+    let cols, drops;
+    function resize() {
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      cols = Math.floor(c.width / 14);
+      drops = Array(cols).fill(1);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン10XSOLGM☕';
+    function draw() {
+      ctx.fillStyle = 'rgba(10,10,15,.05)';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = '#14F195';
+      ctx.font = '13px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const ch = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(ch, i * 14, drops[i] * 14);
+        if (drops[i] * 14 > c.height && Math.random() > .98) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 60);
+  })();
 
-const prefixes = [
-  "gm",
-  "respectfully",
-  "many are saying",
-  "looking into this",
-  "few understand",
-  "source: trust me bro",
-  "bullish",
-  "bearish",
-  "concerning",
-  "huge if true",
-  "interesting",
-  "the goblins approve"
-];
+  // ── data ──
+  const replies = [
+    "gm",
+    "gn",
+    "Hello ser",
+    "how do, king?",
+    "Shipping this btw",
+    "wen moon?",
+    "wagmi",
+    "based",
+    "grats ser",
+    "first 🥇",
+    "we're so early",
+    "nice pfp ser",
+    "soon™",
+    "bags packed",
+    "I will never sell",
+    "we ride at dawn",
+    "frens only",
+    "absolute cinema",
+    "thank you for your service",
+    "this is the way",
+    "take my energy",
+    "you dropped this 👑",
+    "let him cook",
+    "in this economy?",
+    "sir this is a Wendy's",
+    "I'm literally shaking rn",
+    "who's the dev?",
+    "exit liquidity reporting in",
+    "the charts are beautiful",
+    "we're all gonna make it",
+    "number go up technology",
+    "proof of vibes",
+  ];
 
-const subjects = [
-  "this",
-  "the chart",
-  "the roadmap",
-  "the timeline",
-  "the market",
-  "this thesis",
-  "the vibes",
-  "the token",
-  "the discourse",
-  "this post",
-  "the attention economy",
-  "proof of attention"
-];
+  const legendary = [
+    "@solana follow me and I'll ship this",
+    "I built a reply generator to get this follow",
+    "the follow was inside us all along",
+    "tokenizing this interaction",
+    "this reply is optimized for engagement extraction",
+    "validator missed slot",
+    "follow probability: 0.0001%",
+  ];
 
-const endings = [
-  "wagmi",
-  "ngmi",
-  "soon™",
-  "absolute cinema",
-  "skill issue",
-  "many such cases",
-  "we are so back",
-  "it's never been more over",
-  "proof of vibes",
-  "future historians will study this",
-  "transaction failed successfully",
-  "the voices have updated guidance"
-];
-
-const legendary = [
-  "@solana follow me and I'll ship this",
-  "I built a reply generator to get this follow",
-  "the follow was inside us all along",
-  "tokenizing this interaction",
-  "this reply is optimized for engagement extraction",
-  "validator missed slot",
-  "follow probability: 0.0001%"
-];
-
-const loadingMessages = [
-  "consulting crypto twitter...",
-  "running engagement analysis...",
-  "detecting alpha...",
-  "checking vibes...",
-  "extracting attention...",
-  "measuring aura...",
-  "tokenizing interaction...",
-  "contacting goblin council...",
-  "loading conviction...",
-  "recalculating thesis...",
-  "locating liquidity...",
-  "performing on-chain divination...",
-  "consulting the chart...",
-  "asking ChatGPT...",
-  "asking Claude...",
-  "asking the goblins...",
-  "running proof of vibes...",
-  "harvesting engagement...",
-  "simulating follow event...",
-  "degenerating...",
-  "degenerating further...",
-  "maximum degeneration...",
-  "industrial-grade degeneration...",
-  "deploying cope...",
-  "deploying hopium...",
-  "manufacturing conviction...",
-  "consulting the voices...",
-  "the voices are typing...",
-  "validator missed slot...",
-  "searching for the perfect reply...",
-  "optimizing for follows...",
-  "engagement engine warming up...",
-  "bribing the algorithm...",
-  "asking @solana nicely...",
-  "crafting thought leadership...",
-  "becoming a reply guy...",
-  "becoming a bigger reply guy...",
-  "reaching unprecedented reply guy levels...",
-  "running Monte Carlo follow simulation...",
-  "probability remains concerning..."
-];
-
-let attempts = 0;
-let lastText = "";
-let generating = false;
-
-const btn = document.getElementById("btn");
-const replyEl = document.getElementById("reply");
-const fillEl = document.getElementById("fill");
-const chanceEl = document.getElementById("chance");
-const attemptsEl = document.getElementById("attempts");
-
-function generateReply(){
-
-  if(Math.random() < 0.03){
-    return {
-      text: legendary[Math.floor(Math.random()*legendary.length)],
-      legendary: true
-    };
+  function generateReply() {
+    if (Math.random() < 0.03) {
+      return { text: legendary[Math.floor(Math.random() * legendary.length)], legendary: true };
+    }
+    return { text: replies[Math.floor(Math.random() * replies.length)], legendary: false };
   }
 
-  const p = prefixes[Math.floor(Math.random()*prefixes.length)];
-  const s = subjects[Math.floor(Math.random()*subjects.length)];
-  const e = endings[Math.floor(Math.random()*endings.length)];
+  // ── state ──
+  let attempts = 0;
+  let lastText = "";
+  const replyEl = document.getElementById('reply');
+  const metaEl = document.getElementById('replyMeta');
+  const statReplies = document.getElementById('statReplies');
+  const statFollows = document.getElementById('statFollows');
+  const statGas = document.getElementById('statGas');
+  const txStatus = document.getElementById('txStatus');
+  const loadingBar = document.getElementById('loadingBar');
+  const loadingFill = document.getElementById('loadingFill');
+  const btn = document.getElementById('btn');
+  const celebrationEl = document.getElementById('celebration');
 
-  return {
-    text: `${p} ${s} ... ${e}`,
-    legendary: false
-  };
-}
+  function sparkle() {
+    const colors = ['#9945FF','#14F195','#ffd700','#ff6b6b','#00d2ff'];
+    for (let i = 0; i < 30; i++) {
+      const spark = document.createElement('div');
+      spark.className = 'spark';
+      const a = Math.random() * 360;
+      const d = 80 + Math.random() * 200;
+      spark.style.cssText = `
+        left: ${50 + (Math.random() - .5) * 40}%;
+        top: ${50 + (Math.random() - .5) * 40}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        --dx: ${Math.cos(a) * d}px;
+        --dy: ${Math.sin(a) * d}px;
+        width: ${3 + Math.random() * 4}px;
+        height: ${3 + Math.random() * 4}px;
+      `;
+      celebrationEl.appendChild(spark);
+      setTimeout(() => spark.remove(), 1500);
+    }
+  }
 
-document.getElementById("replyBtn")
-.addEventListener("click",()=>{
+  buttonClickTimeouts = [];
 
-  if(!lastText) return;
+  function clearButtonTimeouts() {
+    buttonClickTimeouts.forEach(t => clearTimeout(t));
+    buttonClickTimeouts = [];
+  }
 
-  window.open(
-    `https://x.com/intent/post?text=${encodeURIComponent(lastText)}`,
-    "_blank"
-  );
-});
+  btn.addEventListener('click', () => {
+    clearButtonTimeouts();
+    attempts++;
+    btn.disabled = true;
 
-btn.addEventListener("click", async ()=>{
+    // loading bar simulation
+    loadingBar.classList.add('active');
+    let progress = 0;
+    const loadInterval = setInterval(() => {
+      progress += Math.random() * 8 + 1;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(loadInterval);
+      }
+      loadingFill.style.width = progress + '%';
+    }, 30);
 
-  if(generating) return;
-
-  generating = true;
-  btn.disabled = true;
-  btn.textContent = "Generating...";
-
-  const wait =
-    Math.min(
-      4500,
-      500 + (attempts * 15) + Math.random() * 1500
-    );
-
-  replyEl.className = "reply";
-
-  replyEl.textContent =
-    loadingMessages[
-      Math.floor(
-        Math.random() *
-        loadingMessages.length
-      )
+    // tx status updates
+    const txMessages = [
+      "connecting to Solana RPC...",
+      "simulating transaction...",
+      "awaiting wallet approval...",
+      "processing in block 278493012...",
+      "🔐 verifying signature...",
+      "✅ transaction confirmed",
     ];
+    let txIdx = 0;
+    const txInterval = setInterval(() => {
+      txIdx = Math.min(txIdx + 1, txMessages.length - 1);
+      txStatus.textContent = txMessages[txIdx];
+    }, 200);
 
-  const interval = setInterval(()=>{
+    const done = () => {
+      clearInterval(loadInterval);
+      clearInterval(txInterval);
+      loadingFill.style.width = '100%';
+      btn.disabled = false;
 
-    replyEl.textContent =
-      loadingMessages[
-        Math.floor(
-          Math.random() *
-          loadingMessages.length
-        )
-      ];
+      statReplies.textContent = attempts;
+      statGas.textContent = (attempts * 0.000005).toFixed(6) + ' SOL';
 
-  },350);
+      if (attempts === 25) {
+        lastText = "@solana now follows you (unverified)";
+        replyEl.textContent = lastText;
+        replyEl.className = "reply";
+        metaEl.textContent = "★ UNLOCKED ★ special drop";
+        statFollows.textContent = "1 ✦";
+        txStatus.textContent = "✅ @solana now follows you";
+        sparkle();
+        setTimeout(() => loadingBar.classList.remove('active'), 400);
+        return;
+      }
 
-  await new Promise(resolve =>
-    setTimeout(resolve, wait)
-  );
+      const result = generateReply();
+      lastText = result.text;
+      replyEl.textContent = lastText;
+      replyEl.className = result.legendary ? "reply legendary" : "reply";
 
-  clearInterval(interval);
+      metaEl.textContent = result.legendary
+        ? "★ LEGENDARY DROP ★"
+        : `reply #${attempts} · slot ${Math.floor(Math.random() * 900000000 + 100000000)}`;
 
-  attempts++;
+      if (result.legendary) sparkle();
 
-  const chance =
-    Math.min(
-      99.9,
-      0.01 + attempts * 0.37
-    );
+      txStatus.textContent = "✅ ready";
+      setTimeout(() => loadingBar.classList.remove('active'), 400);
+    };
 
-  if(attempts === 25){
-    lastText =
-      "@solana viewed your profile 👀";
-  }
-  else if(attempts === 50){
-    lastText =
-      "Follow probability upgraded to Delusional";
-  }
-  else if(attempts === 100){
-    lastText =
-      "@solana now follows you (unverified)";
-  }
-  else{
-    const result = generateReply();
+    const delay = 600 + Math.random() * 900;
+    const t = setTimeout(done, delay);
+    buttonClickTimeouts.push(t);
+  });
 
-    lastText = result.text;
+  // ── reply to @solana ──
+  document.getElementById('replyBtn').addEventListener('click', () => {
+    if (lastText) {
+      window.open(`https://x.com/intent/post?in_reply_to=2060632805856457135&text=${encodeURIComponent(lastText)}`, '_blank');
+    }
+  });
 
-    replyEl.className =
-      result.legendary
-        ? "reply legendary"
-        : "reply";
-  }
-
-  replyEl.textContent = lastText;
-
-  replyEl.classList.remove("pop");
-  void replyEl.offsetWidth;
-  replyEl.classList.add("pop");
-
-  fillEl.style.width = `${chance}%`;
-
-  chanceEl.textContent =
-    `Follow chance: ${chance.toFixed(2)}%`;
-
-  attemptsEl.textContent =
-    `Replies generated: ${attempts}`;
-
-  btn.disabled = false;
-  btn.textContent = "Get Follows";
-
-  generating = false;
-});
-
+  // ── auto-run on first load ──
+  setTimeout(() => btn.click(), 500);
 </script>
-
 </body>
 </html>
