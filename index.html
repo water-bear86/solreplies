@@ -51,7 +51,7 @@
 
   .ticker-tape {
     position: fixed;
-    top: 0; left: 0;
+    top: auto; bottom: 0; left: 0;
     width: 100%;
     z-index: 2;
     background: linear-gradient(90deg, #9945FF, #14F195, #9945FF);
@@ -444,8 +444,8 @@
 
 <div class="ticker-tape">
   <div class="scroll">
-    &nbsp;◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; VOL $2.4B &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; TVL $6.8B ▲ 1.1% &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; FEELS GOOD &nbsp;◈&nbsp; HODL &nbsp;◈&nbsp;
-    ◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; VOL $2.4B &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; TVL $6.8B ▲ 1.1% &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; FEELS GOOD &nbsp;◈&nbsp; HODL &nbsp;◈&nbsp;
+    &nbsp;◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
+    ◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
   </div>
 </div>
 
@@ -455,11 +455,11 @@
     <div class="badge-row">
       <span class="badge">● mainnet</span>
       <span class="badge">● live</span>
-      <span class="badge">● beta</span>
+      <span class="badge">● svm agent</span>
     </div>
 
     <img src="https://raw.githubusercontent.com/water-bear86/solreplies/master/solreplies.png" alt="Solana Reply Generator" class="logo">
-    <div class="subtitle">blockchain-powered engagement engine</div>
+    <div class="subtitle">AI-powered Solana engagement engine</div>
 
     <div class="stats">
       <div class="stat">
@@ -498,7 +498,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="secondary" id="replyBtn">↗ reply to @solana</button>
+      <button class="secondary" id="replyBtn">↗ reply to tweet</button>
     </div>
 
     <div class="target-row">
@@ -547,129 +547,148 @@
 
   // ── data ──
   const replies = [
-    "I built a machine to optimize for one @solana follow. It has already become more sentient than my portfolio.",
-    "This reply has been backtested against 10,000 imaginary timelines and still has no edge.",
-    "I asked the algorithm what it wanted and it just whispered: more liquidity.",
-    "This is not a reply. This is a permissionless social transaction.",
-    "I am no longer posting. I am producing proof of attention.",
+    "I built a machine to reply to Solana tweets. It has already become more sentient than my portfolio.",
+    "This reply has been backtested against 10,000 imaginary blocks and still has no edge.",
+    "I asked the SVM what it wanted and it just whispered: more liquidity.",
+    "This is not a reply. This is a permissionless on-chain social transaction.",
+    "I am no longer posting. I am producing proof of attention on Solana.",
     "Every click makes the reply worse. Every worse reply makes the thesis stronger.",
-    "Some people farm yield. I farm eye contact from brand accounts.",
-    "The follow was never the goal. The goal was becoming unemployable in public.",
-    "I have optimized this reply for engagement, aura, and plausible deniability.",
-    "Built different. Mostly worse, but different.",
-    "A normal person would have typed gm. I made infrastructure.",
-    "I turned reply-guy behaviour into a web app. This is either innovation or a cry for help.",
-    "This reply is powered by vibes, Solana, and a dangerous misunderstanding of product-market fit.",
-    "I am attempting to brute-force charisma with JavaScript.",
-    "If this gets a follow, I will immediately claim it was the roadmap all along.",
-    "This is what happens when builders are left unsupervised near a social media incentive.",
-    "I shipped before thinking. Extremely on-chain behaviour.",
-    "The UX is simple: click button, lose dignity, gain conviction.",
-    "Follow probability remains statistically fake but emotionally compelling.",
-    "I regret to inform you the reply generator has developed a thesis.",
-    "The app says my follow odds are 37%. The app is lying, but confidently.",
-    "I made a tiny website to farm a follow because writing one good reply felt inefficient.",
-    "This is a serious product for unserious market conditions.",
-    "My reply has entered price discovery.",
-    "This post has activated the builder-to-reply-guy pipeline.",
-    "I refuse to be judged by people who did not ship a follow simulator.",
-    "The market demanded a reply. I provided infrastructure.",
-    "Reply generated. Dignity permanently locked.",
-    "This is not engagement farming. This is engagement agriculture.",
-    "I have abstracted desperation into a button.",
-    "The button has no utility. Naturally, I am bullish.",
-    "It started as a reply generator and somehow became a personality test.",
-    "I built this instead of touching grass. The grass remains un-tokenized.",
-    "This reply is now a fully diluted social asset.",
-    "You offered a follow. I deployed a machine.",
-    "I am requesting a follow in the most capital-inefficient way possible.",
-    "This is probably why consumer crypto keeps happening.",
-    "The reply is generated. The shame is artisanal.",
-    "I have achieved reply-market fit.",
-    "In hindsight, the follow was the friends we alienated along the way.",
-    "One does not simply ask for the follow. One ships the bit.",
-    "This reply has passed audit by three goblins and a toaster.",
-    "My social graph is now accepting inbound liquidity.",
-    "I turned attention into a progress bar. We are so back.",
-    "The machine says I deserve the follow. The machine is unbiased because I wrote it.",
-    "This reply contains no roadmap, no promises, and unfortunately no shame.",
-    "I made a reply generator so I can outsource being annoying.",
-    "I am not farming engagement. I am conducting field research.",
-    "I built a website with fake follow odds. This is legally distinct from hope.",
-    "The algorithm cannot ignore me forever. Probably.",
-    "This is the minimum viable delusion.",
-    "A follow would validate the product, the thesis, and several poor life choices.",
-    "I clicked the button 100 times and all I got was this increasingly accurate diagnosis.",
-    "Reply-guy-as-a-service is live.",
-    "I have productized needing attention.",
-    "Solana is fast enough for my bad decisions.",
-    "I am submitting this reply to the attention mempool.",
-    "Follow request pending finality.",
-    "My dignity failed simulation but the reply shipped.",
-    "This is an L2 for begging.",
-    "I have discovered a new primitive: proof of please.",
-    "If follows are scarce blockspace, I am bidding emotionally.",
-    "I came for the follow and left with a frontend.",
-    "This interaction has been unnecessarily gamified.",
-    "The reply generator is now my cofounder. It has worse judgment than me.",
-    "I have reduced social anxiety to one button and several lies.",
-    "This is what happens when you incentivize builders with a notification.",
-    "I did not choose the reply-guy life. A brand account posted a challenge.",
-    "The follow odds are fake. The commitment is unfortunately real.",
-    "This reply was assembled in a lab by unpaid goblins.",
-    "If this fails, I will pivot to reply infrastructure.",
-    "The button is green because hope is a compliance risk.",
-    "I turned a tweet into a product requirement.",
-    "I shipped a joke with better UX than half the apps in my bookmarks.",
-    "The generator has determined that my best reply is: seek help.",
-    "This is the first known case of follow-seeking behaviour with a frontend.",
-    "My roadmap is one notification long.",
-    "I am speedrunning the reply-to-builder pipeline.",
-    "This reply is not financial advice, emotional advice, or evidence of stability.",
-    "The website is live. The dignity is deprecated.",
-    "I have made the market more efficient by automating embarrassment.",
-    "This is permissionless clown technology.",
-    "The reply generator has rejected my humanity and requested more clicks.",
-    "One follow. One button. Infinite cope.",
-    "I am entering the Solana Follow Games as an independent contractor.",
+    "Some people farm yield. I farm eye contact from Solana OGs.",
+    "The engagement was never the goal. The goal was becoming unemployable on mainnet.",
+    "I have optimized this reply for engagement, aura, and plausible deniability on-chain.",
+    "Built different. Deployed on SVM. Mostly worse, but verifiable.",
+    "A normal person would have typed gm. I spun up infrastructure.",
+    "I turned reply-guy behaviour into a Solana dApp. This is either innovation or a cry for help.",
+    "This reply is powered by vibes, Solana validators, and a dangerous misunderstanding of product-market fit.",
+    "I am attempting to brute-force charisma with Rust and JavaScript.",
+    "If this gets a reply, I will immediately claim it was the roadmap all along.",
+    "This is what happens when SVM builders are left unsupervised near a social media incentive.",
+    "I shipped before thinking. Extremely on-chain behaviour. Extremely.",
+    "The UX is simple: click button, lose dignity, gain conviction on mainnet.",
+    "Engagement probability remains statistically fake but emotionally compelling on Solana.",
+    "I regret to inform you the reply generator has developed a token thesis.",
+    "The app says my reply odds are 37%. The app is lying, but on-chain and verifiably so.",
+    "I made a tiny website to farm engagement on Solana because writing one good reply felt inefficient.",
+    "This is a serious product for unserious market conditions. Deployed on SVM.",
+    "My reply has entered price discovery on Jupiter.",
+    "This post has activated the SVM builder-to-reply-guy pipeline.",
+    "I refuse to be judged by people who did not ship a Solana engagement bot.",
+    "The market demanded a reply. I provided programmable infrastructure.",
+    "Reply generated on Solana. Dignity permanently locked in a PDA.",
+    "This is not engagement farming. This is regenerative on-chain attention agriculture.",
+    "I have abstracted desperation into a button, then deployed it to mainnet.",
+    "The button has no utility. Naturally, I am bullish on SVM.",
+    "It started as a reply generator and somehow became a Solana ecosystem primitive.",
+    "I built this instead of touching grass. The grass remains un-tokenized on Solana.",
+    "This reply is now a fully diluted social asset on the SVM.",
+    "You posted a Solana take. I deployed a machine to respond.",
+    "I am requesting attention in the most capital-inefficient way possible on mainnet.",
+    "This is probably why consumer crypto on Solana keeps happening.",
+    "The reply is generated. The shame is artisanal and verifiable on-chain.",
+    "I have achieved Solana reply-market fit.",
+    "In hindsight, the engagement was the validators we alienated along the way.",
+    "One does not simply reply on Solana. One ships the transaction.",
+    "This reply has passed audit by three validators and a toaster.",
+    "My social graph is now accepting inbound liquidity via Jupiter.",
+    "I turned attention into a progress bar on Solana. We are so back.",
+    "The SVM says I deserve the reply. The SVM is unbiased because I stake to it.",
+    "This reply contains no roadmap, no promises, and unfortunately no slashing conditions.",
+    "I made a Solana reply generator so I can outsource being annoying at lightspeed.",
+    "I am not farming engagement. I am conducting field research on SVM adoption.",
+    "I built a website with fake reply odds on Solana. This is legally distinct from hope.",
+    "The RPC cannot ignore me forever. Probably. I am spamming it politely.",
+    "This is the minimum viable delusion, deployed to Solana mainnet.",
+    "A reply would validate the product, the thesis, and several poor life choices on-chain.",
+    "I clicked the button 100 times and all I got was this increasingly accurate on-chain diagnosis.",
+    "Reply-guy-as-a-service is live on Solana mainnet.",
+    "I have productized needing attention on the SVM.", 
+    "Solana is fast enough for my bad decisions. 400ms block times, 0ms of thought.",
+    "I am submitting this reply to the attention mempool on Solana.",
+    "Reply request pending finality. ETA ~0.4 seconds. Emotionally, eternity.",
+    "My dignity failed simulation but the reply shipped on mainnet.",
+    "This is an SVM L2 for begging. Permissionless, scalable, embarrassing.",
+    "I have discovered a new SVM primitive: proof of please.",
+    "If replies are scarce blockspace, I am bidding emotionally via priority fees.",
+    "I came for the engagement and left with a Solana frontend and three broken RPCs.",
+    "This interaction has been unnecessarily gamified on the SVM.",
+    "The reply generator is now my cofounder. It has worse tokenomics than me.",
+    "I have reduced social anxiety to one button and several on-chain transactions.",
+    "This is what happens when you incentivize SVM builders with a notification.",
+    "I did not choose the reply-guy life. A Solana hackathon conditioned me.",
+    "The reply odds are fake. The commitment is unfortunately verifiable on-chain.",
+    "This reply was assembled in a lab by unpaid validators and an AI agent.",
+    "If this fails, I will pivot to reply infrastructure on SVM.",
+    "The button is green like a Solana candle because hope is a compliance risk.",
+    "I turned a Solana tweet into a product requirement and then a micro-cap token.",
+    "I shipped a joke with better UX on Solana than half the apps in my bookmarks.",
+    "The generator has determined that my best reply on SVM is: seek help.",
+    "This is the first known case of Solana reply-seeking behaviour with a frontend.",
+    "My Solana roadmap is one notification long and entirely on-chain.",
+    "I am speedrunning the SVM reply-to-builder-to-token pipeline.",
+    "This reply is not financial advice, emotional advice, or evidence of mainnet stability.",
+    "The website is live on Solana. The dignity is deprecated on-chain.",
+    "I have made the attention market more efficient by automating embarrassment on SVM.",
+    "This is permissionless clown technology on the SVM. Fully open source, fully regrettable.",
+    "The Solana reply generator has rejected my humanity and requested more SOL.",
+    "One reply. One button. Infinite cope. Zero downtime on Solana.",
+    "I am entering the Solana Follow Games as an independent SVM contractor.",
     "The app is called Sol Replies because Federal Attention Reserve was taken.",
-    "I built a casino where the jackpot is a social media notification.",
-    "The casino always wins because the casino is me.",
-    "This reply is currently awaiting validator approval.",
-    "The probability meter is lying, but so is every roadmap.",
-    "I accidentally built a tiny monument to wanting to be perceived.",
-    "This is not a reply. This is a cry for distribution.",
-    "I have achieved peak founder-market fit: overbuilding a joke.",
-    "If @solana follows me, the machine will become too powerful.",
-    "If @solana does not follow me, the machine will become bitter.",
-    "Either outcome is bullish for lore.",
-    "This reply has been optimized for the sacred metrics: clicks, cope, and consequences.",
-    "The follow is temporary. The repo is forever.",
-    "I did not win the reply contest, but I did increase the surface area of the bit.",
-    "My contribution to the ecosystem is whatever this is.",
-    "Built on vibes. Secured by delusion.",
-    "The machine has spoken: please clap.",
-    "I am not asking for a follow. I am asking you to respect the architecture.",
-    "This began as a joke and is now requesting a token.",
-    "I have no moat, but I do have a button.",
-    "There are many ways to get noticed. I chose the least normal one.",
+    "I built a casino on Solana where the jackpot is a social media notification.",
+    "The casino always wins because the casino is me and I control the RPC endpoint.",
+    "This reply is currently awaiting validator approval on Solana mainnet.",
+    "The probability meter is lying, but so is every Solana token roadmap.",
+    "I accidentally built a tiny monument to wanting to be perceived on the SVM.",
+    "This is not a reply. This is a cry for distribution on Solana.",
+    "I have achieved peak SVM founder-market fit: overbuilding a joke.",
+    "If I get a reply, the SVM will fork just to accommodate my ego.",
+    "If I don't get a reply, I will deploy a governance proposal about it.",
+    "Either outcome is bullish for Solana lore.",
+    "This reply has been optimized for the sacred metrics: clicks, cope, and SOL.",
+    "The reply is temporary. The Solana repo is forever. The embarrassment is permanent.",
+    "I did not win the reply contest, but I did increase the surface area of the SVM.",
+    "My contribution to the Solana ecosystem is whatever this is. You're welcome.",
+    "Built on Solana vibes. Secured by SVM delusion. Audited by nobody.",
+    "The SVM has spoken: please clap. Transaction confirmed.",
+    "I am not asking for a reply. I am asking you to respect the Solana architecture.",
+    "This began as a joke on Solana and is now requesting a token on pump.fun.",
+    "I have no moat on Solana, but I do have a button and extremely fast finality.",
+    "There are many ways to get noticed on Solana. I chose the least normal one.",
   ];
 
   const legendary = [
-    "@solana follow me and I'll ship this",
-    "I built a reply generator to get this follow",
-    "the follow was inside us all along",
-    "tokenizing this interaction",
-    "this reply is optimized for engagement extraction",
-    "validator missed slot",
-    "follow probability: 0.0001%",
+    "reply and I'll ship the entire Solana protocol upgrade",
+    "I built a Solana reply generator to get this engagement",
+    "the SVM was inside us all along",
+    "tokenizing this interaction on pump.fun",
+    "this reply is optimized for SVM engagement extraction",
+    "validator missed slot but the reply confirmed",
+    "reply probability: 0.0001% (but 100% on Solana)",
   ];
 
-  function generateReply() {
+  function getFallbackReply() {
     if (Math.random() < 0.03) {
       return { text: legendary[Math.floor(Math.random() * legendary.length)], legendary: true };
     }
     return { text: replies[Math.floor(Math.random() * replies.length)], legendary: false };
+  }
+
+  async function generateReply(tweetUrl, tweetId) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tweetUrl, tweetId }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (data.text) {
+        return { text: data.text, legendary: Math.random() < 0.03 };
+      }
+    } catch (e) {}
+    return getFallbackReply();
   }
 
   // ── state ──
@@ -718,6 +737,8 @@
     clearButtonTimeouts();
     attempts++;
     btn.disabled = true;
+    const tweetUrl = document.getElementById('targetInput').value.trim();
+    const tweetId = getTweetId();
 
     // loading bar simulation
     loadingBar.classList.add('active');
@@ -733,12 +754,12 @@
 
     // tx status updates
     const txMessages = [
-      "connecting to Solana RPC...",
-      "simulating transaction...",
-      "awaiting wallet approval...",
-      "processing in block 278493012...",
-      "🔐 verifying signature...",
-      "✅ transaction confirmed",
+      "connecting to RPC...",
+      "fetching tweet data...",
+      "prompting AI agent...",
+      "generating reply...",
+      "🔐 validating cringe levels...",
+      "✅ reply generated",
     ];
     let txIdx = 0;
     const txInterval = setInterval(() => {
@@ -746,7 +767,7 @@
       txStatus.textContent = txMessages[txIdx];
     }, 200);
 
-    const done = () => {
+    const done = async () => {
       clearInterval(loadInterval);
       clearInterval(txInterval);
       loadingFill.style.width = '100%';
@@ -756,18 +777,18 @@
       statGas.textContent = (attempts * 0.000005).toFixed(6) + ' SOL';
 
       if (attempts === 25) {
-        lastText = "@solana now follows you (unverified)";
+        lastText = "AI agent now follows you (unverified)";
         replyEl.textContent = lastText;
         replyEl.className = "reply";
         metaEl.textContent = "★ UNLOCKED ★ special drop";
         statFollows.textContent = "1 ✦";
-        txStatus.textContent = "✅ @solana now follows you";
+        txStatus.textContent = "✅ AI agent now follows you";
         sparkle();
         setTimeout(() => loadingBar.classList.remove('active'), 400);
         return;
       }
 
-      const result = generateReply();
+      const result = await generateReply(tweetUrl, tweetId);
       lastText = result.text;
       replyEl.textContent = lastText;
       replyEl.className = result.legendary ? "reply legendary" : "reply";
@@ -787,7 +808,7 @@
     buttonClickTimeouts.push(t);
   });
 
-  // ── reply to @solana ──
+  // ── reply to tweet ──
   function getTweetId() {
     const val = document.getElementById('targetInput').value.trim();
     const m = val.match(/(?:x\.com|twitter\.com)\/\w+\/status\/(\d+)/);
@@ -797,7 +818,7 @@
   document.getElementById('replyBtn').addEventListener('click', () => {
     if (lastText) {
       const id = getTweetId();
-      window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by solanareplygenerator.lol')}`, '_blank');
+      window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by solana reply generator')}`, '_blank');
     }
   });
 
