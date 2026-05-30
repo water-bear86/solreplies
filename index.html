@@ -361,23 +361,25 @@
   }
   .target-input {
     width: 100%;
-    background: rgba(255,255,255,.03);
-    border: 1px solid rgba(255,255,255,.06);
+    background: #fff;
+    border: 1px solid rgba(153,69,255,.3);
     border-radius: 20px;
-    padding: 6px 14px;
-    color: #888;
+    padding: 8px 14px;
+    color: #000;
     font-family: 'JetBrains Mono', monospace;
-    font-size: .65rem;
+    font-size: .7rem;
+    font-weight: 600;
     text-align: center;
     outline: none;
     transition: border-color .15s;
   }
   .target-input:focus {
-    border-color: rgba(153,69,255,.4);
-    color: #ccc;
+    border-color: rgba(153,69,255,.8);
+    color: #000;
   }
   .target-input::placeholder {
-    color: #444;
+    color: #666;
+    font-weight: 500;
   }
 
   .footer {
@@ -502,7 +504,7 @@
     </div>
 
     <div class="target-row">
-      <input class="target-input" id="targetInput" type="text" placeholder="paste tweet URL or ID" value="2060632805856457135">
+      <input class="target-input" id="targetInput" type="text" placeholder="Paste Tweet Address Here" value="">
     </div>
 
     <div class="footer">
