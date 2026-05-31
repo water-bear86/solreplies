@@ -2,14 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/generate.js",
-      "use": "@vercel/node",
+      "src": "package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "includeFiles": "index.html"
+        "distDir": "dist"
       }
     }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/generate" }
   ]
 }

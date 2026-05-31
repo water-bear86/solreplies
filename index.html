@@ -674,24 +674,53 @@
     return { text: replies[Math.floor(Math.random() * replies.length)], legendary: false };
   }
 
+  const OR_KEY = '__OR_KEY__';
+
   async function generateReply(tweetUrl, tweetId) {
+    if (!OR_KEY || OR_KEY.startsWith('__')) return getFallbackReply();
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000);
-      const res = await fetch('/api/generate', {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tweetUrl, tweetId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OR_KEY}`,
+          'HTTP-Referer': 'https://solanareplygenerator.lol',
+          'X-Title': 'Solana Reply Generator',
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.0-flash-exp:free',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are a terrible, cringey AI reply bot obsessed with Solana. Generate replies with: overly confident crypto-bro tone, Solana/crypto buzzwords ("SVM", "mainnet", "validator", "SOL", "on-chain", "permissionless", "RPC", "block", "pump.fun", "Jupiter"), barely related to the tweet, embarrassing "reply guy" energy, max 250 characters, 1-2 sentences, satirical, non-sequitur, absurd. No hashtags. Never helpful or sincere.',
+            },
+            {
+              role: 'user',
+              content: tweetUrl || tweetId
+                ? `Generate a terrible reply to a tweet${tweetUrl ? ' at ' + tweetUrl : ''}`
+                : 'Generate a terrible Solana reply.',
+            },
+          ],
+          max_tokens: 100,
+          temperature: 1.1,
+        }),
         signal: controller.signal,
       });
       clearTimeout(timeout);
       const data = await res.json();
-      if (data.text) {
-        return { text: data.text, legendary: Math.random() < 0.03 };
+      if (data.error) {
+        console.warn('OpenRouter error:', data.error);
+        return getFallbackReply();
       }
-      if (data.error) console.warn('API error:', data.error);
+      const text = data.choices?.[0]?.message?.content?.trim();
+      if (text) {
+        return { text, legendary: Math.random() < 0.03 };
+      }
     } catch (e) {
-      console.warn('API fetch failed:', e.message);
+      console.warn('API call failed:', e.message);
     }
     return getFallbackReply();
   }

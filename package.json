@@ -1,4 +1,7 @@
 {
   "name": "solreplies",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  }
 }
