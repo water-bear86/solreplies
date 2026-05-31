@@ -509,7 +509,7 @@
 <div class="celebration" id="celebration"></div>
 
 <script>
-  // ── open as chromeless window ──
+  // ── open as chromeless window, keep on top ──
   (function() {
     if (!window.opener && window.top === window) {
       const w = 420, h = 700;
@@ -522,9 +522,16 @@
         'location=no,toolbar=no,menubar=no,scrollbars=no,resizable=yes'
       );
       if (popup) {
+        popup.focus();
+        setInterval(() => { if (popup && !popup.closed) popup.focus(); }, 2000);
         document.body.innerHTML = '';
         window.close();
       }
+    }
+
+    if (window.opener) {
+      window.onload = () => window.focus();
+      window.onblur = () => setTimeout(() => window.focus(), 100);
     }
   })();
 
