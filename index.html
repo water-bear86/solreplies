@@ -509,6 +509,25 @@
 <div class="celebration" id="celebration"></div>
 
 <script>
+  // ── open as chromeless window ──
+  (function() {
+    if (!window.opener && window.top === window) {
+      const w = 420, h = 700;
+      const left = (screen.width - w) / 2;
+      const top = (screen.height - h) / 2;
+      const popup = window.open(
+        location.href,
+        'solreplies',
+        `width=${w},height=${h},left=${left},top=${top},` +
+        'location=no,toolbar=no,menubar=no,scrollbars=no,resizable=yes'
+      );
+      if (popup) {
+        document.body.innerHTML = '';
+        window.close();
+      }
+    }
+  })();
+
   // ── matrix rain ──
   (function() {
     const c = document.getElementById('matrix');
