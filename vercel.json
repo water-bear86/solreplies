@@ -2,6 +2,6 @@
   "version": 2,
   "builds": [
     { "src": "api/generate.js", "use": "@vercel/node" },
-    { "src": "index.html", "use": "@vercel/static" }
+    { "src": "**/*.html", "use": "@vercel/static" }
   ]
 }
