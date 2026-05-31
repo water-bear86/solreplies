@@ -3,5 +3,8 @@
   "builds": [
     { "src": "api/generate.js", "use": "@vercel/node" },
     { "src": "**/*.html", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/api/generate", "destination": "/api/generate" }
   ]
 }
