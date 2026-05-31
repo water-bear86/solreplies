@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf-8');
+const html = readFileSync(join(process.cwd(), 'index.html'), 'utf-8');
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     return handleGenerate(req, res);
   }
@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
   res.end(html);
-};
+}
 
 async function handleGenerate(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
