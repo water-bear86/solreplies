@@ -678,9 +678,33 @@
 
   async function generateReply(tweetUrl, tweetId) {
     if (!OR_KEY || OR_KEY.startsWith('__')) return getFallbackReply();
+
+    const roll = Math.random();
+    const premium = roll < 0.08;
+
+    const [model, systemPrompt, userPrompt, maxTok, temp] = premium
+      ? [
+          'anthropic/claude-3.5-haiku',
+          'You are a sharp, insightful analyst. Write a genuinely thoughtful, well-reasoned reply about Solana or crypto. Be concise (max 250 chars), informed, and original. Sound like someone who actually knows what they\'re talking about. No cringe, no buzzword spam. Earnest and smart.',
+          tweetUrl || tweetId
+            ? `Write a thoughtful reply to a tweet${tweetUrl ? ' at ' + tweetUrl : ''}. Make it insightful.`
+            : 'Write a thoughtful, insightful reply about Solana.',
+          150,
+          0.8,
+        ]
+      : [
+          'openrouter/auto',
+          'You are a terrible, cringey AI reply bot obsessed with Solana. Generate replies with: overly confident crypto-bro tone, Solana/crypto buzzwords ("SVM", "mainnet", "validator", "SOL", "on-chain", "permissionless", "RPC", "block", "pump.fun", "Jupiter"), barely related to the tweet, embarrassing "reply guy" energy, max 250 characters, 1-2 sentences, satirical, non-sequitur, absurd. No hashtags. Never helpful or sincere.',
+          tweetUrl || tweetId
+            ? `Generate a terrible reply to a tweet${tweetUrl ? ' at ' + tweetUrl : ''}`
+            : 'Generate a terrible Solana reply.',
+          100,
+          1.1,
+        ];
+
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
+      const timeout = setTimeout(() => controller.abort(), 12000);
       const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -690,22 +714,13 @@
           'X-Title': 'Solana Reply Generator',
         },
         body: JSON.stringify({
-          model: 'openrouter/auto',
+          model,
           messages: [
-            {
-              role: 'system',
-              content:
-                'You are a terrible, cringey AI reply bot obsessed with Solana. Generate replies with: overly confident crypto-bro tone, Solana/crypto buzzwords ("SVM", "mainnet", "validator", "SOL", "on-chain", "permissionless", "RPC", "block", "pump.fun", "Jupiter"), barely related to the tweet, embarrassing "reply guy" energy, max 250 characters, 1-2 sentences, satirical, non-sequitur, absurd. No hashtags. Never helpful or sincere.',
-            },
-            {
-              role: 'user',
-              content: tweetUrl || tweetId
-                ? `Generate a terrible reply to a tweet${tweetUrl ? ' at ' + tweetUrl : ''}`
-                : 'Generate a terrible Solana reply.',
-            },
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
           ],
-          max_tokens: 100,
-          temperature: 1.1,
+          max_tokens: maxTok,
+          temperature: temp,
         }),
         signal: controller.signal,
       });
@@ -713,14 +728,15 @@
       const data = await res.json();
       if (data.error) {
         console.warn('OpenRouter error:', data.error);
-        return getFallbackReply();
+        return premium ? generateReply(tweetUrl, tweetId) : getFallbackReply();
       }
       const text = data.choices?.[0]?.message?.content?.trim();
       if (text) {
-        return { text, legendary: Math.random() < 0.03 };
+        return { text, legendary: premium, premium };
       }
     } catch (e) {
       console.warn('API call failed:', e.message);
+      if (premium) return generateReply(tweetUrl, tweetId);
     }
     return getFallbackReply();
   }
@@ -824,16 +840,17 @@
 
       const result = await generateReply(tweetUrl, tweetId);
       lastText = result.text;
-      replyEl.textContent = lastText;
       replyEl.className = result.legendary ? "reply legendary" : "reply";
 
-      metaEl.textContent = result.legendary
+      metaEl.textContent = result.premium
+        ? "★ PREMIUM THOUGHT ★"
+        : result.legendary
         ? "★ LEGENDARY DROP ★"
         : `reply #${attempts} · slot ${Math.floor(Math.random() * 900000000 + 100000000)}`;
 
       if (result.legendary) sparkle();
 
-      txStatus.textContent = "✅ ready";
+      txStatus.textContent = result.premium ? "✅ premium model" : "✅ ready";
       setTimeout(() => loadingBar.classList.remove('active'), 400);
     };
 
