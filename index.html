@@ -12,15 +12,14 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #0a0a0f;
+    background: transparent;
     color: #e0e0e0;
     font-family: 'JetBrains Mono', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
     overflow: hidden;
-    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
   }
 
   canvas#matrix {
@@ -29,90 +28,80 @@
     width: 100vw;
     height: 100vh;
     z-index: 0;
-    opacity: .08;
+    opacity: .06;
     pointer-events: none;
   }
 
   .scanlines {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,.08) 2px,
-      rgba(0,0,0,.08) 4px
-    );
+    display: none;
   }
 
   .ticker-tape {
-    position: fixed;
-    top: auto; bottom: 0; left: 0;
     width: 100%;
-    z-index: 2;
     background: linear-gradient(90deg, #9945FF, #14F195, #9945FF);
-    padding: 4px 0;
+    padding: 3px 0;
     overflow: hidden;
     white-space: nowrap;
-    font-size: .7rem;
+    font-size: .55rem;
     font-weight: 700;
     color: #fff;
-    text-shadow: 0 0 6px rgba(255,255,255,.5);
+    text-shadow: 0 0 4px rgba(255,255,255,.4);
     text-transform: uppercase;
     letter-spacing: .1em;
   }
   .ticker-tape .scroll {
     display: inline-block;
-    animation: ticker 30s linear infinite;
+    animation: ticker 25s linear infinite;
   }
   @keyframes ticker {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
 
-  .orb {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 800px;
-    height: 800px;
-    margin-left: -400px;
-    margin-top: -400px;
-    z-index: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, rgba(153,69,255,.12) 0%, rgba(20,241,149,.06) 40%, transparent 70%);
-    animation: orbPulse 4s ease-in-out infinite;
-  }
-  @keyframes orbPulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .6; }
-    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-  }
+  .orb { display: none; }
 
   .card-wrap {
-    position: relative;
-    z-index: 3;
-    perspective: 1200px;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 9999;
+    transition: transform .2s ease;
   }
+  .card-wrap.minimized { display: none; }
+
+  .float-btn {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 9999;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #9945FF, #14F195);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(153,69,255,.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: transform .15s;
+  }
+  .float-btn:hover { transform: scale(1.1); }
+  .float-btn.visible { display: flex; }
 
   .card {
-    background: linear-gradient(135deg, rgba(22,33,62,.92), rgba(10,10,20,.95));
+    background: linear-gradient(135deg, rgba(22,33,62,.95), rgba(10,10,20,.97));
     border: 1px solid rgba(153,69,255,.3);
-    border-radius: 20px;
-    padding: 48px 44px 36px;
+    border-radius: 16px;
+    padding: 0;
     text-align: center;
-    max-width: 500px;
-    width: 90vw;
+    width: 360px;
     box-shadow:
       0 0 40px rgba(153,69,255,.15),
       0 0 80px rgba(20,241,149,.08),
-      inset 0 1px 0 rgba(255,255,255,.04);
-    backdrop-filter: blur(12px);
-    transform-style: preserve-3d;
-    animation: cardFloat 6s ease-in-out infinite;
+      0 8px 32px rgba(0,0,0,.5);
+    backdrop-filter: blur(16px);
     position: relative;
     overflow: hidden;
   }
@@ -121,7 +110,7 @@
     position: absolute;
     top: -2px; left: -2px;
     right: -2px; bottom: -2px;
-    border-radius: 22px;
+    border-radius: 18px;
     background: linear-gradient(135deg, #9945FF, #14F195, #9945FF, #14F195);
     background-size: 400% 400%;
     z-index: -1;
@@ -133,10 +122,48 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-  @keyframes cardFloat {
-    0%, 100% { transform: rotateX(1deg) rotateY(-1deg); }
-    50% { transform: rotateX(-1deg) rotateY(1deg); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    cursor: grab;
+    border-bottom: 1px solid rgba(153,69,255,.15);
+    user-select: none;
   }
+  .card-header:active { cursor: grabbing; }
+  .card-header .title {
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: #14F195;
+    text-shadow: 0 0 12px rgba(20,241,149,.3);
+  }
+  .card-header .minimize-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,.1);
+    color: #888;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+  }
+  .card-header .minimize-btn:hover { color: #fff; border-color: rgba(255,255,255,.3); }
+
+  .card-body {
+    padding: 24px 20px 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  .card-body::-webkit-scrollbar { width: 3px; }
+  .card-body::-webkit-scrollbar-thumb { background: rgba(153,69,255,.3); border-radius: 3px; }
 
   .badge-row {
     display: flex;
@@ -440,19 +467,18 @@
 <body>
 
 <canvas id="matrix"></canvas>
-<div class="scanlines"></div>
-<div class="orb" style="top:40%;left:30%"></div>
-<div class="orb" style="top:60%;left:70%;width:600px;height:600px;animation-delay:2s"></div>
 
-<div class="ticker-tape">
-  <div class="scroll">
-    &nbsp;◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
-    ◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
-  </div>
-</div>
+<button class="float-btn visible" id="floatBtn" title="Solana Reply Generator">⚡</button>
 
-<div class="card-wrap">
+<div class="card-wrap" id="cardWrap">
   <div class="card">
+
+    <div class="card-header" id="cardHeader">
+      <span class="title">● Solana Reply Generator</span>
+      <button class="minimize-btn" id="minimizeBtn">−</button>
+    </div>
+
+    <div class="card-body">
 
     <div class="badge-row">
       <span class="badge">● mainnet</span>
@@ -512,12 +538,67 @@
       &nbsp;·&nbsp; v0.4.2-alpha
     </div>
 
+    </div>
+
+    <div class="ticker-tape">
+      <div class="scroll">
+        &nbsp;◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
+        ◈ SOL $178.42 ▲ 3.2% &nbsp;◈&nbsp; TVL $6.8B &nbsp;◈&nbsp; AI AGENT ONLINE &nbsp;◈&nbsp; FARMING ENGAGEMENT &nbsp;◈&nbsp; WAGMI &nbsp;◈&nbsp; SEND IT &nbsp;◈&nbsp; GM ☕ &nbsp;◈&nbsp;
+      </div>
+    </div>
+
   </div>
 </div>
 
 <div class="celebration" id="celebration"></div>
 
 <script>
+  // ── floating window drag & minimize ──
+  (function() {
+    const wrap = document.getElementById('cardWrap');
+    const header = document.getElementById('cardHeader');
+    const minBtn = document.getElementById('minimizeBtn');
+    const floatBtn = document.getElementById('floatBtn');
+    let isDragging = false, startX, startY, origX, origY;
+
+    header.addEventListener('mousedown', (e) => {
+      if (e.target === minBtn) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = wrap.getBoundingClientRect();
+      origX = rect.left;
+      origY = rect.top;
+      wrap.style.transition = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      wrap.style.right = 'auto';
+      wrap.style.bottom = 'auto';
+      wrap.style.left = (origX + dx) + 'px';
+      wrap.style.top = (origY + dy) + 'px';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      wrap.style.transition = 'transform .2s ease';
+    });
+
+    minBtn.addEventListener('click', () => {
+      wrap.classList.add('minimized');
+      floatBtn.classList.add('visible');
+    });
+
+    floatBtn.addEventListener('click', () => {
+      wrap.classList.remove('minimized');
+      floatBtn.classList.remove('visible');
+    });
+  })();
+
   // ── matrix rain ──
   (function() {
     const c = document.getElementById('matrix');
