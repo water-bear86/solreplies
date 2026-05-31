@@ -12,14 +12,16 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: transparent;
+    background: #0a0a0f;
     color: #e0e0e0;
     font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     overflow: hidden;
     margin: 0;
     padding: 0;
-    width: 100vw;
-    height: 100vh;
   }
 
   canvas#matrix {
@@ -61,47 +63,26 @@
   .orb { display: none; }
 
   .card-wrap {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    z-index: 9999;
-    transition: transform .2s ease;
+    position: relative;
+    z-index: 3;
   }
   .card-wrap.minimized { display: none; }
 
-  .float-btn {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    z-index: 9999;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #9945FF, #14F195);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(153,69,255,.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    transition: transform .15s;
-  }
-  .float-btn:hover { transform: scale(1.1); }
-  .float-btn.visible { display: flex; }
+  .float-btn { display: none; }
 
   .card {
-    background: linear-gradient(135deg, rgba(22,33,62,.95), rgba(10,10,20,.97));
+    background: linear-gradient(135deg, rgba(22,33,62,.92), rgba(10,10,20,.95));
     border: 1px solid rgba(153,69,255,.3);
     border-radius: 16px;
     padding: 0;
     text-align: center;
-    width: 360px;
+    max-width: 400px;
+    width: 95vw;
     box-shadow:
       0 0 40px rgba(153,69,255,.15),
       0 0 80px rgba(20,241,149,.08),
-      0 8px 32px rgba(0,0,0,.5);
-    backdrop-filter: blur(16px);
+      inset 0 1px 0 rgba(255,255,255,.04);
+    backdrop-filter: blur(12px);
     position: relative;
     overflow: hidden;
   }
@@ -126,44 +107,22 @@
   .card-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 16px;
-    cursor: grab;
     border-bottom: 1px solid rgba(153,69,255,.15);
-    user-select: none;
   }
-  .card-header:active { cursor: grabbing; }
   .card-header .title {
-    font-size: .65rem;
+    font-size: .6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .12em;
     color: #14F195;
     text-shadow: 0 0 12px rgba(20,241,149,.3);
   }
-  .card-header .minimize-btn {
-    background: none;
-    border: 1px solid rgba(255,255,255,.1);
-    color: #888;
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: .8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-  }
-  .card-header .minimize-btn:hover { color: #fff; border-color: rgba(255,255,255,.3); }
 
   .card-body {
     padding: 24px 20px 20px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
-  .card-body::-webkit-scrollbar { width: 3px; }
-  .card-body::-webkit-scrollbar-thumb { background: rgba(153,69,255,.3); border-radius: 3px; }
 
   .badge-row {
     display: flex;
@@ -468,14 +427,11 @@
 
 <canvas id="matrix"></canvas>
 
-<button class="float-btn visible" id="floatBtn" title="Solana Reply Generator">⚡</button>
-
 <div class="card-wrap" id="cardWrap">
   <div class="card">
 
-    <div class="card-header" id="cardHeader">
+    <div class="card-header">
       <span class="title">● Solana Reply Generator</span>
-      <button class="minimize-btn" id="minimizeBtn">−</button>
     </div>
 
     <div class="card-body">
@@ -553,50 +509,20 @@
 <div class="celebration" id="celebration"></div>
 
 <script>
-  // ── floating window drag & minimize ──
+  // ── auto-open as popup ──
   (function() {
-    const wrap = document.getElementById('cardWrap');
-    const header = document.getElementById('cardHeader');
-    const minBtn = document.getElementById('minimizeBtn');
-    const floatBtn = document.getElementById('floatBtn');
-    let isDragging = false, startX, startY, origX, origY;
-
-    header.addEventListener('mousedown', (e) => {
-      if (e.target === minBtn) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const rect = wrap.getBoundingClientRect();
-      origX = rect.left;
-      origY = rect.top;
-      wrap.style.transition = 'none';
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      wrap.style.right = 'auto';
-      wrap.style.bottom = 'auto';
-      wrap.style.left = (origX + dx) + 'px';
-      wrap.style.top = (origY + dy) + 'px';
-    });
-
-    window.addEventListener('mouseup', () => {
-      if (!isDragging) return;
-      isDragging = false;
-      wrap.style.transition = 'transform .2s ease';
-    });
-
-    minBtn.addEventListener('click', () => {
-      wrap.classList.add('minimized');
-      floatBtn.classList.add('visible');
-    });
-
-    floatBtn.addEventListener('click', () => {
-      wrap.classList.remove('minimized');
-      floatBtn.classList.remove('visible');
-    });
+    if (!window.opener && window.top === window) {
+      const w = 420, h = 720;
+      const left = (screen.width - w) / 2;
+      const top = (screen.height - h) / 2;
+      window.open(
+        location.href,
+        'solreplies',
+        `width=${w},height=${h},left=${left},top=${top},` +
+        'location=no,toolbar=no,menubar=no,scrollbars=no,resizable=yes'
+      );
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#14F195;font-family:monospace;background:#0a0a0f;text-align:center"><div><p style="font-size:1.2rem">⚡ Solana Reply Generator launched</p><p style="color:#555;font-size:.8rem;margin-top:8px">check the popup window</p></div></div>';
+    }
   })();
 
   // ── matrix rain ──
