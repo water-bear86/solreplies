@@ -1,9 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const key = process.env.OPENROUTER_API_KEY || '';
-const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
-const out = html.replace('__OR_KEY__', key);
-fs.mkdirSync(path.join(__dirname, 'dist'), { recursive: true });
-fs.writeFileSync(path.join(__dirname, 'dist', 'index.html'), out);
+const distDir = path.join(__dirname, 'dist');
+const staticFiles = [
+  'index.html',
+  'manifest.webmanifest',
+  'service-worker.js',
+  'solreplies.png',
+  'preview.png',
+  'pwa-icon-192.png',
+  'pwa-icon-512.png',
+];
+
+fs.rmSync(distDir, { recursive: true, force: true });
+fs.mkdirSync(distDir, { recursive: true });
+
+for (const file of staticFiles) {
+  fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
+}
+
 console.log('Build complete');
