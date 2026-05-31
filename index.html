@@ -509,22 +509,6 @@
 <div class="celebration" id="celebration"></div>
 
 <script>
-  // ── auto-open as popup ──
-  (function() {
-    if (!window.opener && window.top === window) {
-      const w = 420, h = 720;
-      const left = (screen.width - w) / 2;
-      const top = (screen.height - h) / 2;
-      window.open(
-        location.href,
-        'solreplies',
-        `width=${w},height=${h},left=${left},top=${top},` +
-        'location=no,toolbar=no,menubar=no,scrollbars=no,resizable=yes'
-      );
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#14F195;font-family:monospace;background:#0a0a0f;text-align:center"><div><p style="font-size:1.2rem">⚡ Solana Reply Generator launched</p><p style="color:#555;font-size:.8rem;margin-top:8px">check the popup window</p></div></div>';
-    }
-  })();
-
   // ── matrix rain ──
   (function() {
     const c = document.getElementById('matrix');
