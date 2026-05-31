@@ -1,10 +1,15 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/generate.js", "use": "@vercel/node" },
-    { "src": "**/*.html", "use": "@vercel/static" }
+    {
+      "src": "api/generate.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "index.html"
+      }
+    }
   ],
-  "rewrites": [
-    { "source": "/api/generate", "destination": "/api/generate" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/generate" }
   ]
 }

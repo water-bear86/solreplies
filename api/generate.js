@@ -1,18 +1,43 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+const fs = require('fs');
+const path = require('path');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf-8');
+
+module.exports = async (req, res) => {
+  if (req.method === 'POST') {
+    return handleGenerate(req, res);
+  }
+
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.end();
+  }
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  res.end(html);
+};
+
+async function handleGenerate(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'application/json');
 
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
-    console.error('Missing OPENROUTER_API_KEY');
-    return res.json({ text: null, error: 'no_api_key' });
+    return res.end(JSON.stringify({ text: null, error: 'no_api_key' }));
   }
 
-  const { tweetUrl, tweetId } = req.body || {};
+  let body = '';
+  for await (const chunk of req) body += chunk;
+
+  let tweetUrl, tweetId;
+  try {
+    ({ tweetUrl, tweetId } = JSON.parse(body || '{}'));
+  } catch {
+    return res.end(JSON.stringify({ text: null, error: 'bad_json' }));
+  }
 
   let tweetText = '';
   if (tweetUrl || tweetId) {
@@ -66,25 +91,23 @@ export default async function handler(req, res) {
     clearTimeout(timeout);
 
     if (!ai.ok) {
-      const err = await ai.text();
-      console.error('OpenRouter HTTP', ai.status, err);
-      return res.json({ text: null, error: `http_${ai.status}` });
+      console.error('OpenRouter HTTP', ai.status);
+      return res.end(JSON.stringify({ text: null, error: `http_${ai.status}` }));
     }
 
     const d = await ai.json();
 
     if (d.error) {
       console.error('OpenRouter error:', JSON.stringify(d.error));
-      return res.json({ text: null, error: d.error.code || 'api_error' });
+      return res.end(JSON.stringify({ text: null, error: d.error.code || 'api_error' }));
     }
 
     const text = d.choices?.[0]?.message?.content?.trim();
-    if (text) return res.json({ text });
+    if (text) return res.end(JSON.stringify({ text }));
 
-    console.error('No text in response:', JSON.stringify(d).substring(0, 200));
-    return res.json({ text: null, error: 'no_text' });
+    return res.end(JSON.stringify({ text: null, error: 'no_text' }));
   } catch (e) {
     console.error('API call failed:', e.message);
-    return res.json({ text: null, error: e.name === 'AbortError' ? 'timeout' : 'fetch_error' });
+    return res.end(JSON.stringify({ text: null, error: e.name === 'AbortError' ? 'timeout' : 'fetch_error' }));
   }
 }
