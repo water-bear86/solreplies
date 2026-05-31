@@ -6,13 +6,13 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { tweetUrl, tweetId } = req.body || {};
-
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
-    console.error('OPENROUTER_API_KEY not set');
-    return res.json({ text: null });
+    console.error('Missing OPENROUTER_API_KEY');
+    return res.json({ text: null, error: 'no_api_key' });
   }
+
+  const { tweetUrl, tweetId } = req.body || {};
 
   let tweetText = '';
   if (tweetUrl || tweetId) {
@@ -23,73 +23,68 @@ export default async function handler(req, res) {
       );
       if (oembed.ok) {
         const d = await oembed.json();
-        tweetText = d.html
-          .replace(/<[^>]*>/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .substring(0, 500);
+        tweetText = d.html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 500);
       }
-    } catch (e) {
-      console.error('oEmbed fetch failed:', e.message);
-    }
+    } catch {}
   }
 
-  const models = [
-    'google/gemini-2.5-flash-lite:free',
-    'google/gemini-2.0-flash-exp:free',
-    'meta-llama/llama-4-maverick:free',
-    'deepseek/deepseek-chat-v3-0324:free',
-  ];
+  const model = 'google/gemini-2.0-flash-exp:free';
 
-  for (const model of models) {
-    try {
-      console.log(`Trying model: ${model}`);
-      const ai = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-          'HTTP-Referer': process.env.VERCEL_URL || 'https://solanareplygenerator.lol',
-          'X-Title': 'Solana Reply Generator',
-        },
-        body: JSON.stringify({
-          model,
-          messages: [
-            {
-              role: 'system',
-              content:
-                'You are a terrible, cringey AI reply bot obsessed with Solana. Generate replies with: overly confident crypto-bro tone, Solana/crypto buzzwords ("SVM", "mainnet", "validator", "SOL", "on-chain", "permissionless", "RPC", "block", "pump.fun", "Jupiter", "ecosystem"), barely related to the tweet, embarrassing "reply guy" energy, max 250 characters, 1-2 sentences, satirical, non-sequitur, absurd. No hashtags. Never be helpful or sincere. Sound like a Solana builder who automated his personality and deployed it to mainnet.',
-            },
-            {
-              role: 'user',
-              content: tweetText
-                ? `Generate a terrible reply to this tweet: "${tweetText}"`
-                : 'Generate a terrible reply to a Solana-related tweet.',
-            },
-          ],
-          max_tokens: 100,
-          temperature: 1.1,
-        }),
-      });
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-      const d = await ai.json();
+    const ai = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://solanareplygenerator.lol',
+        'X-Title': 'Solana Reply Generator',
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You are a terrible, cringey AI reply bot obsessed with Solana. Generate replies with: overly confident crypto-bro tone, Solana/crypto buzzwords ("SVM", "mainnet", "validator", "SOL", "on-chain", "permissionless", "RPC", "block", "pump.fun", "Jupiter"), barely related to the tweet, embarrassing "reply guy" energy, max 250 characters, 1-2 sentences, satirical, non-sequitur, absurd. No hashtags. Never helpful or sincere.',
+          },
+          {
+            role: 'user',
+            content: tweetText
+              ? `Generate a terrible reply to: "${tweetText}"`
+              : 'Generate a terrible Solana reply.',
+          },
+        ],
+        max_tokens: 100,
+        temperature: 1.1,
+      }),
+      signal: controller.signal,
+    });
 
-      if (d.error) {
-        console.error(`Model ${model} error:`, JSON.stringify(d.error));
-        continue;
-      }
+    clearTimeout(timeout);
 
-      const text = d.choices?.[0]?.message?.content?.trim();
-      if (text) {
-        console.log(`Success with model: ${model}`);
-        return res.json({ text });
-      }
-      console.log(`Model ${model} returned no text`);
-    } catch (e) {
-      console.error(`Model ${model} failed:`, e.message);
+    if (!ai.ok) {
+      const err = await ai.text();
+      console.error('OpenRouter HTTP', ai.status, err);
+      return res.json({ text: null, error: `http_${ai.status}` });
     }
-  }
 
-  console.error('All models failed, returning null');
-  return res.json({ text: null });
+    const d = await ai.json();
+
+    if (d.error) {
+      console.error('OpenRouter error:', JSON.stringify(d.error));
+      return res.json({ text: null, error: d.error.code || 'api_error' });
+    }
+
+    const text = d.choices?.[0]?.message?.content?.trim();
+    if (text) return res.json({ text });
+
+    console.error('No text in response:', JSON.stringify(d).substring(0, 200));
+    return res.json({ text: null, error: 'no_text' });
+  } catch (e) {
+    console.error('API call failed:', e.message);
+    return res.json({ text: null, error: e.name === 'AbortError' ? 'timeout' : 'fetch_error' });
+  }
 }

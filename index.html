@@ -677,7 +677,7 @@
   async function generateReply(tweetUrl, tweetId) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
+      const timeout = setTimeout(() => controller.abort(), 10000);
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -689,7 +689,10 @@
       if (data.text) {
         return { text: data.text, legendary: Math.random() < 0.03 };
       }
-    } catch (e) {}
+      if (data.error) console.warn('API error:', data.error);
+    } catch (e) {
+      console.warn('API fetch failed:', e.message);
+    }
     return getFallbackReply();
   }
 
