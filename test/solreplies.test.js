@@ -227,16 +227,18 @@ test('PWA manifest and service worker are wired for home-screen install', () => 
   const serviceWorker = read('service-worker.js');
   assert.match(serviceWorker, /install/);
   assert.match(serviceWorker, /fetch/);
+  assert.match(serviceWorker, /\/srgmark\.png/);
+  assert.match(serviceWorker, /\/srgwordmark\.png/);
 });
 
 test('supplied brand assets are wired into the app bundle', () => {
   const html = read('index.html');
   const build = read('build.js');
 
-  assert.match(html, /src="\/srgmark\.jpeg"/);
-  assert.match(html, /src="\/srgmasrjk\.jpeg"/);
-  assert.match(build, /'srgmark\.jpeg'/);
-  assert.match(build, /'srgmasrjk\.jpeg'/);
-  assert.ok(fs.statSync(path.join(root, 'srgmark.jpeg')).size > 0);
-  assert.ok(fs.statSync(path.join(root, 'srgmasrjk.jpeg')).size > 0);
+  assert.match(html, /src="\/srgmark\.png"/);
+  assert.match(html, /src="\/srgwordmark\.png"/);
+  assert.match(build, /'srgmark\.png'/);
+  assert.match(build, /'srgwordmark\.png'/);
+  assert.ok(fs.statSync(path.join(root, 'srgmark.png')).size > 0);
+  assert.ok(fs.statSync(path.join(root, 'srgwordmark.png')).size > 0);
 });

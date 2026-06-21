@@ -9,13 +9,10 @@
 <meta name="apple-mobile-web-app-title" content="Sol Replies">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/srgmark.png" type="image/png">
 <link rel="apple-touch-icon" href="/pwa-icon-192.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/water-bear86/solreplies/master/preview.png">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/water-bear86/solreplies/master/preview.png">
-<script>
-  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-</script>
-<script defer src="/_vercel/speed-insights/script.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
 
@@ -79,7 +76,7 @@
   .card-wrap {
     position: relative;
     z-index: 3;
-    width: min(400px, calc(100vw - 24px));
+    width: min(430px, calc(100vw - 24px));
     max-width: calc(100vw - 24px);
     min-width: 0;
   }
@@ -88,12 +85,12 @@
   .float-btn { display: none; }
 
   .card {
-    background: linear-gradient(135deg, rgba(22,33,62,.92), rgba(10,10,20,.95));
+    background: linear-gradient(135deg, rgba(18,22,42,.97), rgba(8,10,20,.98));
     border: 1px solid rgba(153,69,255,.3);
     border-radius: 16px;
     padding: 0;
     text-align: center;
-    max-width: 400px;
+    max-width: 430px;
     width: 100%;
     box-shadow:
       0 0 40px rgba(153,69,255,.15),
@@ -133,12 +130,12 @@
   .card-header .header-mark {
     width: 22px;
     height: 22px;
-    border-radius: 50%;
+    border-radius: 5px;
     object-fit: cover;
     box-shadow: 0 0 12px rgba(20,241,149,.22);
   }
   .card-header .title {
-    font-size: .6rem;
+    font-size: .72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .12em;
@@ -158,7 +155,7 @@
     flex-wrap: wrap;
   }
   .badge {
-    font-size: .55rem;
+    font-size: .6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .12em;
@@ -174,19 +171,16 @@
   @keyframes badgePulse { from { opacity: .7; } to { opacity: 1; } }
 
   .logo {
-    width: min(100%, 320px);
+    width: min(100%, 360px);
     height: auto;
     display: block;
-    margin: 0 auto 10px;
-    padding: 10px 12px;
-    background: rgba(255,255,255,.98);
-    border-radius: 10px;
-    filter: drop-shadow(0 0 18px rgba(153,69,255,.35));
+    margin: 0 auto 14px;
+    filter: drop-shadow(0 0 18px rgba(153,69,255,.32));
   }
 
   .subtitle {
-    font-size: .65rem;
-    color: #666;
+    font-size: .72rem;
+    color: #c7ccd8;
     margin-bottom: 24px;
     letter-spacing: .2em;
     text-transform: uppercase;
@@ -206,13 +200,13 @@
     transition: all .2s;
   }
   .stat .label {
-    font-size: .5rem;
+    font-size: .58rem;
     text-transform: uppercase;
     letter-spacing: .12em;
-    color: #555;
+    color: #a9afbf;
   }
   .stat .value {
-    font-size: .8rem;
+    font-size: .9rem;
     font-weight: 700;
     margin-top: 2px;
     font-family: 'JetBrains Mono', monospace;
@@ -225,8 +219,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: .55rem;
-    color: #555;
+    font-size: .64rem;
+    color: #c2c7d4;
     margin-bottom: 20px;
     padding: 4px 12px;
     background: rgba(255,255,255,.02);
@@ -249,9 +243,9 @@
   }
   .field-label {
     display: block;
-    font-size: .52rem;
+    font-size: .6rem;
     font-weight: 700;
-    color: #6f6f80;
+    color: #c2c7d4;
     letter-spacing: .14em;
     text-align: left;
     text-transform: uppercase;
@@ -267,7 +261,7 @@
     padding: 12px 14px;
     color: #050509;
     font-family: 'JetBrains Mono', monospace;
-    font-size: .72rem;
+    font-size: .86rem;
     font-weight: 600;
     text-align: left;
     outline: none;
@@ -279,7 +273,7 @@
     color: #050509;
   }
   .target-input::placeholder {
-    color: #666;
+    color: #4d5360;
     font-weight: 500;
   }
 
@@ -380,8 +374,8 @@
   }
 
   .reply-meta {
-    font-size: .5rem;
-    color: #444;
+    font-size: .6rem;
+    color: #b2b8c7;
     letter-spacing: .1em;
     text-transform: uppercase;
     min-height: 1.2em;
@@ -397,10 +391,10 @@
   }
   .secondary{
     background:transparent;
-    color:#888;
+    color:#a8adba;
     font-size:.85rem;
     font-weight:500;
-    border:1px solid #333;
+    border:1px solid #4a4f5e;
     border-radius:40px;
     padding:8px 20px;
     cursor:pointer;
@@ -409,13 +403,13 @@
   }
 
   .secondary:hover{
-    color:#aaa;
-    border-color:#555;
+    color:#f0f3f8;
+    border-color:#747b8d;
   }
   .secondary:disabled,
   .secondary:disabled:hover {
-    color: #4f4f5d;
-    border-color: #262634;
+    color: #7e8495;
+    border-color: #454b5e;
     cursor: not-allowed;
     opacity: .62;
   }
@@ -424,12 +418,12 @@
   .footer {
     margin-top: 16px;
     font-size: .5rem;
-    color: #333;
+    color: #717789;
     letter-spacing: .15em;
     text-transform: uppercase;
   }
   .footer a {
-    color: #555;
+    color: #8e95a8;
     text-decoration: none;
   }
   .footer a:hover { color: #888; }
@@ -509,7 +503,7 @@
   <div class="card">
 
     <div class="card-header">
-      <img src="/srgmark.jpeg" alt="" class="header-mark">
+      <img src="/srgmark.png" alt="" class="header-mark">
       <span class="title">Solana Reply Generator</span>
     </div>
 
@@ -521,7 +515,7 @@
       <span class="badge">● svm agent</span>
     </div>
 
-    <img src="/srgmasrjk.jpeg" alt="Solana Reply Generator" class="logo">
+    <img src="/srgwordmark.png" alt="Solana Reply Generator" class="logo">
     <div class="subtitle">AI-powered Solana engagement engine</div>
 
     <div class="stats">
@@ -559,7 +553,7 @@
 
     <div class="reply-meta" id="replyMeta">output pending</div>
     <div class="reply" id="reply">
-      <span style="color:#555;font-weight:400;font-size:.85rem">paste a tweet, then generate a reply</span>
+      <span style="color:#9aa1b2;font-weight:500;font-size:.9rem">paste a tweet, then generate a reply</span>
     </div>
 
     <div class="loading-bar" id="loadingBar">
