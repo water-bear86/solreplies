@@ -7,6 +7,8 @@ const staticFiles = [
   'manifest.webmanifest',
   'service-worker.js',
   'solreplies.png',
+  'srgmark.jpeg',
+  'srgmasrjk.jpeg',
   'preview.png',
   'pwa-icon-192.png',
   'pwa-icon-512.png',
