@@ -5,6 +5,8 @@ const APP_SHELL = [
   '/manifest.webmanifest',
   '/service-worker.js',
   '/solreplies.png',
+  '/srgmark.png',
+  '/srgwordmark.png',
   '/preview.png',
   '/pwa-icon-192.png',
   '/pwa-icon-512.png',

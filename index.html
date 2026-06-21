@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Sol Replies">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/srgmark.png" type="image/png">
 <link rel="apple-touch-icon" href="/pwa-icon-192.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/water-bear86/solreplies/master/preview.png">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/water-bear86/solreplies/master/preview.png">
@@ -75,7 +76,7 @@
   .card-wrap {
     position: relative;
     z-index: 3;
-    width: min(400px, calc(100vw - 24px));
+    width: min(430px, calc(100vw - 24px));
     max-width: calc(100vw - 24px);
     min-width: 0;
   }
@@ -84,12 +85,12 @@
   .float-btn { display: none; }
 
   .card {
-    background: linear-gradient(135deg, rgba(22,33,62,.92), rgba(10,10,20,.95));
+    background: linear-gradient(135deg, rgba(18,22,42,.97), rgba(8,10,20,.98));
     border: 1px solid rgba(153,69,255,.3);
     border-radius: 16px;
     padding: 0;
     text-align: center;
-    max-width: 400px;
+    max-width: 430px;
     width: 100%;
     box-shadow:
       0 0 40px rgba(153,69,255,.15),
@@ -122,11 +123,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     padding: 10px 16px;
     border-bottom: 1px solid rgba(153,69,255,.15);
   }
+  .card-header .header-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    object-fit: cover;
+    box-shadow: 0 0 12px rgba(20,241,149,.22);
+  }
   .card-header .title {
-    font-size: .6rem;
+    font-size: .72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .12em;
@@ -146,7 +155,7 @@
     flex-wrap: wrap;
   }
   .badge {
-    font-size: .55rem;
+    font-size: .6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .12em;
@@ -162,16 +171,16 @@
   @keyframes badgePulse { from { opacity: .7; } to { opacity: 1; } }
 
   .logo {
-    width: min(100%, 320px);
+    width: min(100%, 360px);
     height: auto;
     display: block;
-    margin: 0 auto 6px;
-    filter: drop-shadow(0 0 18px rgba(153,69,255,.45));
+    margin: 0 auto 14px;
+    filter: drop-shadow(0 0 18px rgba(153,69,255,.32));
   }
 
   .subtitle {
-    font-size: .65rem;
-    color: #666;
+    font-size: .72rem;
+    color: #c7ccd8;
     margin-bottom: 24px;
     letter-spacing: .2em;
     text-transform: uppercase;
@@ -191,13 +200,13 @@
     transition: all .2s;
   }
   .stat .label {
-    font-size: .5rem;
+    font-size: .58rem;
     text-transform: uppercase;
     letter-spacing: .12em;
-    color: #555;
+    color: #a9afbf;
   }
   .stat .value {
-    font-size: .8rem;
+    font-size: .9rem;
     font-weight: 700;
     margin-top: 2px;
     font-family: 'JetBrains Mono', monospace;
@@ -210,8 +219,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: .55rem;
-    color: #555;
+    font-size: .64rem;
+    color: #c2c7d4;
     margin-bottom: 20px;
     padding: 4px 12px;
     background: rgba(255,255,255,.02);
@@ -227,8 +236,50 @@
   }
   @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
 
+  .workflow {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .field-label {
+    display: block;
+    font-size: .6rem;
+    font-weight: 700;
+    color: #c2c7d4;
+    letter-spacing: .14em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .target-row {
+    margin: 0;
+  }
+  .target-input {
+    width: 100%;
+    background: rgba(255,255,255,.96);
+    border: 1px solid rgba(153,69,255,.38);
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: #050509;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .86rem;
+    font-weight: 600;
+    text-align: left;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .target-input:focus {
+    border-color: rgba(20,241,149,.85);
+    box-shadow: 0 0 0 3px rgba(20,241,149,.12);
+    color: #050509;
+  }
+  .target-input::placeholder {
+    color: #4d5360;
+    font-weight: 500;
+  }
+
   .btn-primary {
     position: relative;
+    width: 100%;
     background: linear-gradient(135deg, #9945FF, #14F195);
     color: #fff;
     font-family: 'Inter', sans-serif;
@@ -323,8 +374,8 @@
   }
 
   .reply-meta {
-    font-size: .5rem;
-    color: #444;
+    font-size: .6rem;
+    color: #b2b8c7;
     letter-spacing: .1em;
     text-transform: uppercase;
     min-height: 1.2em;
@@ -335,63 +386,44 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-top: 4px;
+    margin-top: 12px;
     flex-wrap: wrap;
   }
   .secondary{
     background:transparent;
-    color:#888;
+    color:#a8adba;
     font-size:.85rem;
     font-weight:500;
-    border:1px solid #333;
+    border:1px solid #4a4f5e;
     border-radius:40px;
     padding:8px 20px;
     cursor:pointer;
     transition:all .15s;
-    margin-top:16px;
+    margin-top:0;
   }
 
   .secondary:hover{
-    color:#aaa;
-    border-color:#555;
+    color:#f0f3f8;
+    border-color:#747b8d;
+  }
+  .secondary:disabled,
+  .secondary:disabled:hover {
+    color: #7e8495;
+    border-color: #454b5e;
+    cursor: not-allowed;
+    opacity: .62;
   }
   [hidden] { display: none !important; }
-
-  .target-row {
-    margin-top: 8px;
-  }
-  .target-input {
-    width: 100%;
-    background: #fff;
-    border: 1px solid rgba(153,69,255,.3);
-    border-radius: 20px;
-    padding: 8px 14px;
-    color: #000;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    font-weight: 600;
-    text-align: center;
-    outline: none;
-    transition: border-color .15s;
-  }
-  .target-input:focus {
-    border-color: rgba(153,69,255,.8);
-    color: #000;
-  }
-  .target-input::placeholder {
-    color: #666;
-    font-weight: 500;
-  }
 
   .footer {
     margin-top: 16px;
     font-size: .5rem;
-    color: #333;
+    color: #717789;
     letter-spacing: .15em;
     text-transform: uppercase;
   }
   .footer a {
-    color: #555;
+    color: #8e95a8;
     text-decoration: none;
   }
   .footer a:hover { color: #888; }
@@ -471,7 +503,8 @@
   <div class="card">
 
     <div class="card-header">
-      <span class="title">● Solana Reply Generator</span>
+      <img src="/srgmark.png" alt="" class="header-mark">
+      <span class="title">Solana Reply Generator</span>
     </div>
 
     <div class="card-body">
@@ -482,7 +515,7 @@
       <span class="badge">● svm agent</span>
     </div>
 
-    <img src="/solreplies.png" alt="Solana Reply Generator" class="logo">
+    <img src="/srgwordmark.png" alt="Solana Reply Generator" class="logo">
     <div class="subtitle">AI-powered Solana engagement engine</div>
 
     <div class="stats">
@@ -505,7 +538,13 @@
       <span id="txStatus">awaiting transaction...</span>
     </div>
 
-    <button class="btn-primary" id="btn">► Execute Reply</button>
+    <div class="workflow">
+      <label class="field-label" for="targetInput">tweet target</label>
+      <div class="target-row">
+        <input class="target-input" id="targetInput" type="text" placeholder="Paste X/Twitter status URL or ID" value="">
+      </div>
+      <button class="btn-primary" id="btn">► Generate Reply</button>
+    </div>
 
     <div class="equalizer">
       <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -514,7 +553,7 @@
 
     <div class="reply-meta" id="replyMeta">output pending</div>
     <div class="reply" id="reply">
-      <span style="color:#555;font-weight:400;font-size:.85rem">press ► Execute Reply</span>
+      <span style="color:#9aa1b2;font-weight:500;font-size:.9rem">paste a tweet, then generate a reply</span>
     </div>
 
     <div class="loading-bar" id="loadingBar">
@@ -522,12 +561,8 @@
     </div>
 
     <div class="btn-row">
-      <button class="secondary" id="replyBtn">↗ reply to tweet</button>
+      <button class="secondary" id="replyBtn" disabled>↗ reply to tweet</button>
       <button class="secondary" id="installBtn" hidden>+ install app</button>
-    </div>
-
-    <div class="target-row">
-      <input class="target-input" id="targetInput" type="text" placeholder="Paste Tweet Address Here" value="">
     </div>
 
     <div class="footer">
@@ -777,7 +812,9 @@
   const loadingBar = document.getElementById('loadingBar');
   const loadingFill = document.getElementById('loadingFill');
   const btn = document.getElementById('btn');
+  const replyBtn = document.getElementById('replyBtn');
   const celebrationEl = document.getElementById('celebration');
+  replyBtn.disabled = true;
 
   function sparkle() {
     const colors = ['#9945FF','#14F195','#ffd700','#ff6b6b','#00d2ff'];
@@ -800,7 +837,7 @@
     }
   }
 
-  buttonClickTimeouts = [];
+  let buttonClickTimeouts = [];
 
   function clearButtonTimeouts() {
     buttonClickTimeouts.forEach(t => clearTimeout(t));
@@ -811,6 +848,7 @@
     clearButtonTimeouts();
     attempts++;
     btn.disabled = true;
+    replyBtn.disabled = true;
     const tweetUrl = document.getElementById('targetInput').value.trim();
     const tweetId = getTweetId();
 
@@ -857,6 +895,7 @@
         metaEl.textContent = "★ UNLOCKED ★ special drop";
         statFollows.textContent = "1 ✦";
         txStatus.textContent = "✅ AI agent now follows you";
+        replyBtn.disabled = false;
         sparkle();
         setTimeout(() => loadingBar.classList.remove('active'), 400);
         return;
@@ -882,6 +921,7 @@
         : result.premium
         ? "✅ premium model"
         : "✅ model ready";
+      replyBtn.disabled = false;
       setTimeout(() => loadingBar.classList.remove('active'), 400);
     };
 
@@ -897,11 +937,10 @@
     return m ? m[1] : val;
   }
 
-  document.getElementById('replyBtn').addEventListener('click', () => {
-    if (lastText) {
-      const id = getTweetId();
-      window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by https://solanareplygenerator.lol')}`, '_blank');
-    }
+  replyBtn.addEventListener('click', () => {
+    if (!lastText || replyBtn.disabled) return;
+    const id = getTweetId();
+    window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by https://solanareplygenerator.lol')}`, '_blank');
   });
 
   // ── PWA install ──
@@ -934,9 +973,6 @@
       });
     });
   }
-
-  // ── auto-run on first load ──
-  setTimeout(() => btn.click(), 500);
 </script>
 </body>
 </html>
