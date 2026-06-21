@@ -122,8 +122,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     padding: 10px 16px;
     border-bottom: 1px solid rgba(153,69,255,.15);
+  }
+  .card-header .header-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 12px rgba(20,241,149,.22);
   }
   .card-header .title {
     font-size: .6rem;
@@ -165,8 +173,11 @@
     width: min(100%, 320px);
     height: auto;
     display: block;
-    margin: 0 auto 6px;
-    filter: drop-shadow(0 0 18px rgba(153,69,255,.45));
+    margin: 0 auto 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,.98);
+    border-radius: 10px;
+    filter: drop-shadow(0 0 18px rgba(153,69,255,.35));
   }
 
   .subtitle {
@@ -227,8 +238,50 @@
   }
   @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
 
+  .workflow {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .field-label {
+    display: block;
+    font-size: .52rem;
+    font-weight: 700;
+    color: #6f6f80;
+    letter-spacing: .14em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .target-row {
+    margin: 0;
+  }
+  .target-input {
+    width: 100%;
+    background: rgba(255,255,255,.96);
+    border: 1px solid rgba(153,69,255,.38);
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: #050509;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 600;
+    text-align: left;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .target-input:focus {
+    border-color: rgba(20,241,149,.85);
+    box-shadow: 0 0 0 3px rgba(20,241,149,.12);
+    color: #050509;
+  }
+  .target-input::placeholder {
+    color: #666;
+    font-weight: 500;
+  }
+
   .btn-primary {
     position: relative;
+    width: 100%;
     background: linear-gradient(135deg, #9945FF, #14F195);
     color: #fff;
     font-family: 'Inter', sans-serif;
@@ -335,7 +388,7 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-top: 4px;
+    margin-top: 12px;
     flex-wrap: wrap;
   }
   .secondary{
@@ -348,40 +401,21 @@
     padding:8px 20px;
     cursor:pointer;
     transition:all .15s;
-    margin-top:16px;
+    margin-top:0;
   }
 
   .secondary:hover{
     color:#aaa;
     border-color:#555;
   }
+  .secondary:disabled,
+  .secondary:disabled:hover {
+    color: #4f4f5d;
+    border-color: #262634;
+    cursor: not-allowed;
+    opacity: .62;
+  }
   [hidden] { display: none !important; }
-
-  .target-row {
-    margin-top: 8px;
-  }
-  .target-input {
-    width: 100%;
-    background: #fff;
-    border: 1px solid rgba(153,69,255,.3);
-    border-radius: 20px;
-    padding: 8px 14px;
-    color: #000;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    font-weight: 600;
-    text-align: center;
-    outline: none;
-    transition: border-color .15s;
-  }
-  .target-input:focus {
-    border-color: rgba(153,69,255,.8);
-    color: #000;
-  }
-  .target-input::placeholder {
-    color: #666;
-    font-weight: 500;
-  }
 
   .footer {
     margin-top: 16px;
@@ -471,7 +505,8 @@
   <div class="card">
 
     <div class="card-header">
-      <span class="title">● Solana Reply Generator</span>
+      <img src="/srgmark.jpeg" alt="" class="header-mark">
+      <span class="title">Solana Reply Generator</span>
     </div>
 
     <div class="card-body">
@@ -482,7 +517,7 @@
       <span class="badge">● svm agent</span>
     </div>
 
-    <img src="/solreplies.png" alt="Solana Reply Generator" class="logo">
+    <img src="/srgmasrjk.jpeg" alt="Solana Reply Generator" class="logo">
     <div class="subtitle">AI-powered Solana engagement engine</div>
 
     <div class="stats">
@@ -505,7 +540,13 @@
       <span id="txStatus">awaiting transaction...</span>
     </div>
 
-    <button class="btn-primary" id="btn">► Execute Reply</button>
+    <div class="workflow">
+      <label class="field-label" for="targetInput">tweet target</label>
+      <div class="target-row">
+        <input class="target-input" id="targetInput" type="text" placeholder="Paste X/Twitter status URL or ID" value="">
+      </div>
+      <button class="btn-primary" id="btn">► Generate Reply</button>
+    </div>
 
     <div class="equalizer">
       <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -514,7 +555,7 @@
 
     <div class="reply-meta" id="replyMeta">output pending</div>
     <div class="reply" id="reply">
-      <span style="color:#555;font-weight:400;font-size:.85rem">press ► Execute Reply</span>
+      <span style="color:#555;font-weight:400;font-size:.85rem">paste a tweet, then generate a reply</span>
     </div>
 
     <div class="loading-bar" id="loadingBar">
@@ -522,12 +563,8 @@
     </div>
 
     <div class="btn-row">
-      <button class="secondary" id="replyBtn">↗ reply to tweet</button>
+      <button class="secondary" id="replyBtn" disabled>↗ reply to tweet</button>
       <button class="secondary" id="installBtn" hidden>+ install app</button>
-    </div>
-
-    <div class="target-row">
-      <input class="target-input" id="targetInput" type="text" placeholder="Paste Tweet Address Here" value="">
     </div>
 
     <div class="footer">
@@ -777,7 +814,9 @@
   const loadingBar = document.getElementById('loadingBar');
   const loadingFill = document.getElementById('loadingFill');
   const btn = document.getElementById('btn');
+  const replyBtn = document.getElementById('replyBtn');
   const celebrationEl = document.getElementById('celebration');
+  replyBtn.disabled = true;
 
   function sparkle() {
     const colors = ['#9945FF','#14F195','#ffd700','#ff6b6b','#00d2ff'];
@@ -800,7 +839,7 @@
     }
   }
 
-  buttonClickTimeouts = [];
+  let buttonClickTimeouts = [];
 
   function clearButtonTimeouts() {
     buttonClickTimeouts.forEach(t => clearTimeout(t));
@@ -811,6 +850,7 @@
     clearButtonTimeouts();
     attempts++;
     btn.disabled = true;
+    replyBtn.disabled = true;
     const tweetUrl = document.getElementById('targetInput').value.trim();
     const tweetId = getTweetId();
 
@@ -857,6 +897,7 @@
         metaEl.textContent = "★ UNLOCKED ★ special drop";
         statFollows.textContent = "1 ✦";
         txStatus.textContent = "✅ AI agent now follows you";
+        replyBtn.disabled = false;
         sparkle();
         setTimeout(() => loadingBar.classList.remove('active'), 400);
         return;
@@ -882,6 +923,7 @@
         : result.premium
         ? "✅ premium model"
         : "✅ model ready";
+      replyBtn.disabled = false;
       setTimeout(() => loadingBar.classList.remove('active'), 400);
     };
 
@@ -897,11 +939,10 @@
     return m ? m[1] : val;
   }
 
-  document.getElementById('replyBtn').addEventListener('click', () => {
-    if (lastText) {
-      const id = getTweetId();
-      window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by https://solanareplygenerator.lol')}`, '_blank');
-    }
+  replyBtn.addEventListener('click', () => {
+    if (!lastText || replyBtn.disabled) return;
+    const id = getTweetId();
+    window.open(`https://x.com/intent/post?in_reply_to=${id}&text=${encodeURIComponent(lastText + '\n\nreply generated by https://solanareplygenerator.lol')}`, '_blank');
   });
 
   // ── PWA install ──
@@ -934,9 +975,6 @@
       });
     });
   }
-
-  // ── auto-run on first load ──
-  setTimeout(() => btn.click(), 500);
 </script>
 </body>
 </html>

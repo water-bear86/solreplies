@@ -23,6 +23,7 @@ function createElement(id) {
     value: '',
     textContent: id === 'reply' ? 'press execute reply' : '',
     className: '',
+    disabled: false,
     style: {},
     events: {},
     classList: {
@@ -130,10 +131,32 @@ test('generated replies are printed into the review window', async () => {
     premium: true,
   });
 
+  assert.equal(elements.get('replyBtn').disabled, true);
+
   elements.get('btn').click();
   await runPendingTimers(timers);
 
   assert.equal(elements.get('reply').textContent, 'Generated reviewable reply');
+  assert.equal(elements.get('replyBtn').disabled, false);
+});
+
+test('reply workflow asks for the tweet before generation and reply handoff', () => {
+  const html = read('index.html');
+
+  const inputIndex = html.indexOf('id="targetInput"');
+  const generateIndex = html.indexOf('id="btn"');
+  const replyIndex = html.indexOf('id="reply"');
+  const replyButtonIndex = html.indexOf('id="replyBtn"');
+
+  assert.notEqual(inputIndex, -1);
+  assert.notEqual(generateIndex, -1);
+  assert.notEqual(replyIndex, -1);
+  assert.notEqual(replyButtonIndex, -1);
+  assert.ok(inputIndex < generateIndex, 'tweet input should appear before the generate button');
+  assert.ok(generateIndex < replyIndex, 'generated reply preview should appear after generation');
+  assert.ok(replyIndex < replyButtonIndex, 'reply-to-tweet action should follow the preview');
+  assert.match(html, /id="replyBtn"[^>]*disabled/);
+  assert.doesNotMatch(html, /setTimeout\(\(\)\s*=>\s*btn\.click\(\),\s*500\)/);
 });
 
 test('browser app uses the local reply API instead of exposing OpenRouter secrets', () => {
@@ -204,4 +227,16 @@ test('PWA manifest and service worker are wired for home-screen install', () => 
   const serviceWorker = read('service-worker.js');
   assert.match(serviceWorker, /install/);
   assert.match(serviceWorker, /fetch/);
+});
+
+test('supplied brand assets are wired into the app bundle', () => {
+  const html = read('index.html');
+  const build = read('build.js');
+
+  assert.match(html, /src="\/srgmark\.jpeg"/);
+  assert.match(html, /src="\/srgmasrjk\.jpeg"/);
+  assert.match(build, /'srgmark\.jpeg'/);
+  assert.match(build, /'srgmasrjk\.jpeg'/);
+  assert.ok(fs.statSync(path.join(root, 'srgmark.jpeg')).size > 0);
+  assert.ok(fs.statSync(path.join(root, 'srgmasrjk.jpeg')).size > 0);
 });
