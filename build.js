@@ -4,6 +4,7 @@ const path = require('path');
 const distDir = path.join(__dirname, 'dist');
 const staticFiles = [
   'index.html',
+  'privacy.html',
   'manifest.webmanifest',
   'service-worker.js',
   'solreplies.png',

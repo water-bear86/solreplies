@@ -567,6 +567,7 @@
 
     <div class="footer">
       <a href="https://github.com/water-bear86/solreplies" target="_blank">[source]</a>
+      &nbsp;·&nbsp; <a href="/privacy.html">[privacy]</a>
       &nbsp;·&nbsp; v0.5.0-alpha
     </div>
 
@@ -813,8 +814,17 @@
   const loadingFill = document.getElementById('loadingFill');
   const btn = document.getElementById('btn');
   const replyBtn = document.getElementById('replyBtn');
+  const targetInput = document.getElementById('targetInput');
   const celebrationEl = document.getElementById('celebration');
   replyBtn.disabled = true;
+
+  function preloadTargetInput() {
+    const params = new URLSearchParams(location.search || '');
+    const target = params.get('tweetUrl') || params.get('url') || params.get('tweetId') || '';
+    if (target) targetInput.value = target;
+  }
+
+  preloadTargetInput();
 
   function sparkle() {
     const colors = ['#9945FF','#14F195','#ffd700','#ff6b6b','#00d2ff'];
@@ -849,7 +859,7 @@
     attempts++;
     btn.disabled = true;
     replyBtn.disabled = true;
-    const tweetUrl = document.getElementById('targetInput').value.trim();
+    const tweetUrl = targetInput.value.trim();
     const tweetId = getTweetId();
 
     // loading bar simulation
@@ -932,7 +942,7 @@
 
   // ── reply to tweet ──
   function getTweetId() {
-    const val = document.getElementById('targetInput').value.trim();
+    const val = targetInput.value.trim();
     const m = val.match(/(?:x\.com|twitter\.com)\/\w+\/status\/(\d+)/);
     return m ? m[1] : val;
   }

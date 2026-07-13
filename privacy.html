@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - Solana Reply Generator</title>
+<meta name="theme-color" content="#0a0a0f">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0a0a0f;
+    color: #e8e8ee;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    padding: 32px 18px;
+  }
+  main {
+    width: min(840px, 100%);
+    margin: 0 auto;
+  }
+  a { color: #14f195; }
+  h1, h2 {
+    line-height: 1.15;
+    margin: 0 0 14px;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: #fff;
+  }
+  h2 {
+    margin-top: 34px;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+  p, li { color: #cfcfda; }
+  .meta {
+    color: #9ba0b5;
+    margin-bottom: 28px;
+  }
+  .panel {
+    border: 1px solid rgba(20,241,149,.25);
+    background: rgba(255,255,255,.04);
+    border-radius: 8px;
+    padding: 18px;
+    margin: 24px 0;
+  }
+  ul { padding-left: 22px; }
+  code {
+    color: #fff;
+    background: rgba(255,255,255,.08);
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <p><a href="/">Back to Solana Reply Generator</a></p>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Effective date: June 1, 2026</p>
+
+  <div class="panel">
+    <p>Solana Reply Generator is a small web app and Chrome extension that generates short replies for Tweet/X status links. We do not intentionally save user data. This policy explains the limited data that is processed only to provide the reply-generation feature.</p>
+  </div>
+
+  <h2>Information We Collect</h2>
+  <p>We do not require an account, and we do not ask for your name, email address, payment information, contacts, location, browsing history, or authentication credentials. We do not intentionally store generated replies, Tweet URLs, tweet IDs, or extracted Tweet context in an application database.</p>
+  <p>When you generate a reply, the app or extension may send the following information to our API:</p>
+  <ul>
+    <li>The Tweet/X URL or tweet ID you provided or right-clicked.</li>
+    <li>Tweet embed text and author information fetched from X's public oEmbed endpoint for that Tweet URL.</li>
+    <li>Basic request metadata may be processed transiently by infrastructure providers, such as IP address, user agent, request path, timestamps, and error logs.</li>
+  </ul>
+
+  <h2>How We Use Information</h2>
+  <p>We use this information only to generate the requested reply, operate the service, debug failures, prevent abuse, and maintain reliability. We do not use it to build user profiles, track users across sites, or personalize advertising.</p>
+  <p>The Chrome extension uses its permissions only when you choose <code>Create Solana reply</code> from the right-click menu. It does not read arbitrary page content, track browsing history, inject scripts into pages, or run in the background to monitor websites.</p>
+
+  <h2>Sharing and Service Providers</h2>
+  <p>To provide the reply-generation feature, the API may share the Tweet URL, tweet ID, extracted public Tweet context, and prompt text with:</p>
+  <ul>
+    <li><strong>OpenRouter</strong>, which routes the prompt to an AI model and returns generated text.</li>
+    <li><strong>X / Twitter oEmbed</strong>, which returns public embed data for the Tweet URL.</li>
+    <li><strong>Vercel</strong>, which hosts the website and API and may process request logs and operational metadata.</li>
+  </ul>
+  <p>We do not sell user data, save generated replies for later use, use user data for advertising, or share it with data brokers.</p>
+
+  <h2>Chrome Extension Permissions</h2>
+  <ul>
+    <li><code>contextMenus</code>: used to add the right-click action that starts reply generation.</li>
+    <li><code>tabs</code>: used only to open X's reply composer or the Solana Reply Generator fallback page in a new tab.</li>
+    <li><code>https://solanareplygenerator.lol/*</code>: used only to call our reply-generation API.</li>
+  </ul>
+
+  <h2>Remote Code</h2>
+  <p>The Chrome extension does not load or execute remotely hosted code. All JavaScript executed by the extension is packaged inside the extension. API responses are treated as data and are not executed as code.</p>
+
+  <h2>Data Retention</h2>
+  <p>We do not intentionally save user data, maintain user accounts, or maintain a user database for generated replies. Hosting and service providers may process temporary operational logs according to their normal practices, but Solana Reply Generator does not use those logs to identify users, profile users, or retain generated reply history.</p>
+
+  <h2>Security</h2>
+  <p>Requests to the website, API, and extension API endpoint use HTTPS. No method of transmission or hosting is perfectly secure, but we limit permissions and data use to what is needed for the user-facing reply-generation feature.</p>
+
+  <h2>Your Choices</h2>
+  <p>You can avoid sending Tweet context by not using the generation feature. You can uninstall or disable the Chrome extension at any time from Chrome's extensions page.</p>
+
+  <h2>Children</h2>
+  <p>Solana Reply Generator is not directed to children under 13, and we do not knowingly collect personal information from children.</p>
+
+  <h2>Changes</h2>
+  <p>We may update this policy as the product changes. The effective date above will be updated when material changes are made.</p>
+
+  <h2>Contact</h2>
+  <p>For privacy questions, contact us through the support contact listed in the Chrome Web Store listing or open an issue at <a href="https://github.com/water-bear86/solreplies/issues">github.com/water-bear86/solreplies/issues</a>.</p>
+
+  <h2>Chrome Web Store Limited Use Disclosure</h2>
+  <p>The use of information received from Chrome APIs will adhere to the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+</main>
+</body>
+</html>

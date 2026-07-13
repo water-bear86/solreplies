@@ -2,6 +2,7 @@ const CACHE_NAME = 'solreplies-v0.5.0';
 const APP_SHELL = [
   '/',
   '/index.html',
+  '/privacy.html',
   '/manifest.webmanifest',
   '/service-worker.js',
   '/solreplies.png',
